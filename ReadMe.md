@@ -1,3 +1,19 @@
+Yii 1.1 user auth module
+=============
+This module was created to authorize users in Yii 1.1 applications. 
+
+Module supports basic authentification, login and password restore procedures.
+
+Module also contains user and ip blocking mechanism to prevent bruteforce attacs.
+
+You are welcome!
+=============
+If you want to add or modify some module code please feel free and just do it! 
+
+Any help will be appreciated.
+
+Installation
+=============
 
 To install Auth module please follow instruction below.
 
@@ -51,4 +67,9 @@ d.      'homeUrl'=>array('auth/user/index'),
 
 6.  You can change default layout for module pages in auth/components/Controller.php
 
-Ver.: 150307 1118
+Information
+=============
+Author: Gregory Rusakov
+e-mail: greg@ontime.email
+
+Current version.: 150307 1118
