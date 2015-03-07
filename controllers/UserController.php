@@ -427,6 +427,7 @@ class UserController extends Controller
 
         $controller=$action->controller->id;
         $currentAction=$action->id;
+      
         if(Yii::app()->user->isGuest){
             if ($controller=='user'){
                
@@ -444,7 +445,7 @@ class UserController extends Controller
             Yii::app()->user->setFlash('info', Yii::t('AuthModule.main','Requested page is not available in this mode')); 
             $this->redirect(Yii::app()->getHomeUrl());
         }
-
+        
         return true;
     }
 
