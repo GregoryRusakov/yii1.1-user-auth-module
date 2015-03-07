@@ -52,6 +52,10 @@ class AuthModule extends CWebModule
                  */
                 
 	}
+        
+        public function isAdminUser($id){
+            return true;
+        }
 
 	public function beforeControllerAction($controller, $action)
 	{

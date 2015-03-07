@@ -143,4 +143,8 @@ class Common {
 
         return $ip;
     }
+    
+    public function isAdminUser($id){
+        return true;
+    }
 }
