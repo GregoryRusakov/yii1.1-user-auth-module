@@ -54,7 +54,13 @@ class AuthModule extends CWebModule
 	}
         
         public function isAdminUser($id){
-            return true;
+            $roles=new Roles();
+            $model=$roles->findByUserId($id);
+            if (!isset($model)){
+                //user not found, so it is not an admin
+                return false;
+            }
+            return $model->is_admin;
         }
 
 	public function beforeControllerAction($controller, $action)
