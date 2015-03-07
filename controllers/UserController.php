@@ -35,13 +35,13 @@ class UserController extends Controller
             $formLogin->attributes=$_POST['LoginForm'];
             if(empty($formLogin->username)){
                 Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Empty login'));
-                $this->render('login', array('modelLogin'=>$formLogin));
+                $this->render('login', array('model'=>$formLogin));
                 return;   
             }
             
             if(empty($formLogin->password)){
                 Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Empty password'));
-                $this->render('login', array('modelLogin'=>$formLogin));
+                $this->render('login', array('model'=>$formLogin));
                 return;   
             }            
             // validate user input and redirect to the previous page if valid
@@ -58,7 +58,7 @@ class UserController extends Controller
                 if (!Yii::app()->user->hasFlash('error')){
                     Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Incorrect login or password'));
                 }
-                $this->render('login', array('modelLogin'=>$formLogin));
+                $this->render('login', array('model'=>$formLogin));
                 return; 
             }
         }
