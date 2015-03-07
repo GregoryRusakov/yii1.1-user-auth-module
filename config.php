@@ -23,7 +23,7 @@
         'adminEmail'=>'root@localhost',
         'websiteHost'=>'http://localhost/trader-news.ru',
         'profilePage'=>array('user/index'),
-        'defaultController'=>'user/index',
+        'defaultController'=>'user/login',
 
     );
     
