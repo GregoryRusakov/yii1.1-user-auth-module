@@ -12,7 +12,7 @@
     return array(
         'Your IP address has been blocked'=>'Hi! Your IP address %s has been blocked till %s %s"',
         'Inrorrect login or password'=>'Inrorrect login or password',
-        'User not activated'=>'Use %s not activated',
+        'User not activated'=>'User %s not activated',
         'User has been blocked'=>'User %s has been blocked',
         'User has been deleted'=>'User %s has been deleted',
         'User has been blocked until'=>'User has been blocked until %s',

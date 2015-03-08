@@ -16,7 +16,7 @@
         'cookieBasedLoginDays'=>5,
         'userBlockMaxLoginAttempts'=>3,
         'userBlockTimeMinutes'=>30,
-        'ipBlockMaxLoginAttempts'=>2,
+        'ipBlockMaxLoginAttempts'=>5,
         'ipBlockTimeMinutes'=>30,              
         'dateFormat'=>'Y-m-d H:i:s',              
         'timeZoneLabel'=>'МСК',     
