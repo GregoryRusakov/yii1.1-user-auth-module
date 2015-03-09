@@ -59,7 +59,7 @@ class authWebUser extends CWebUser{
         
         return true;
         
-    }    
-
+    }   
+      
 }
 

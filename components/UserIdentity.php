@@ -28,7 +28,7 @@ class UserIdentity extends CUserIdentity
 	{
             
             //$ip=Yii::app()->request->getUserHostAddress();
-            $ip=Common::getUserIP();
+            $ip=Common::getUserIp();
             
             $timeZoneLabel=Common::getParam('timeZoneLabel');
             $dateFormat=Common::getParam('dateFormat');

@@ -375,12 +375,12 @@ class UserController extends Controller
         $validations=Validations::model()->find($criteria);
         if ($validations==null){
             //incorrect guid
-            yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Restore failed. ID was not found'));
+            Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Restore failed. ID was not found'));
             return null;
         }
 
         if ((time()-$validations->exp_datetime)<0){
-            yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Restore failed. ID is obsolet'));
+            Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Restore failed. ID is obsolet'));
             return null;
         }
 

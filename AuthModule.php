@@ -50,6 +50,7 @@ class AuthModule extends CWebModule
                     }catch(Exception $ex){
                         //nothing to do because parameter in application is apsent
                         $ex=null;
+                        $this->dateFormat='Y-m-d H:i:s';
                     
                     }
                     
