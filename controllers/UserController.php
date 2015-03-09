@@ -310,7 +310,7 @@ class UserController extends Controller
             $model=new PassChangeForm();
             $model->attributes=$_POST['PassChangeForm'];
             if(!$model->validate()){
-                yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Form validation error'));
+                Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Form validation error'));
                 $this->render('passchange', array('model'=>$model));
                 return;
             }
@@ -320,7 +320,7 @@ class UserController extends Controller
             $user_id=$this->getRestoreUserById($guid, self::VALIDATOR_RESTORE);
             if ($user_id==null){
                 if (!Yii::app()->user->hasFlash('error')){
-                    yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Incorrect data in the form'));
+                    Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Incorrect data in the form'));
                 }
                 $this->render('passchange', array('model'=>$model));
                 return;

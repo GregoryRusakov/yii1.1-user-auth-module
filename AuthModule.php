@@ -22,7 +22,7 @@ class AuthModule extends CWebModule
         public $ipBlockMaxLoginAttempts=0;
         public $ipBlockTimeMinutes=0;
         
-        public $dateFormat='Y-m-d H:i:s';
+        public $dateFormat='';
         public $timeZoneLabel='GMT';
         
         public $adminEmail='';
@@ -43,6 +43,19 @@ class AuthModule extends CWebModule
                     
 		));
               
+                if ($this->dateFormat==null){
+                    try{
+                        $value=Yii::app()->params[$paramName];
+                        $this->dateFormat=$value;
+                    }catch(Exception $ex){
+                        //nothing to do because parameter in application is apsent
+                        $ex=null;
+                    
+                    }
+                    
+                    
+                }
+                
                 /*
                 Yii::app()->setComponents(          
                         array('messages' => array(
@@ -53,16 +66,7 @@ class AuthModule extends CWebModule
                 
 	}
         
-        public function isAdminUser($id){
-            $roles=new Roles();
-            $model=$roles->findByUserId($id);
-            if (!isset($model)){
-                //user not found, so it is not an admin
-                return false;
-            }
-            return $model->is_admin;
-        }
-
+    
 	public function beforeControllerAction($controller, $action)
 	{
 		if(parent::beforeControllerAction($controller, $action))
