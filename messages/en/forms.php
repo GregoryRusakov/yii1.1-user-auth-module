@@ -21,7 +21,7 @@
         'GUID'=>'GUID',
         'Exp date'=>'Expiration date',
         'Email'=>'Email',
-        'Key'=>'Key',
+        'Licence key'=>'Licence key',
         'Login'=>'Login',
         'Full name'=>'Full name',
         'Registration date'=>'Registration date',

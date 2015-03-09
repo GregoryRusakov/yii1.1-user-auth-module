@@ -15,7 +15,7 @@
  *
  * The followings are the available columns in table 'users':
  * @property integer $id
- * @property string $key
+ * @property string $licence_key
  * @property string $email
  * @property string $username
  * @property string $fullname
@@ -48,7 +48,7 @@ class Users extends CActiveRecord{
             // NOTE: you should only define rules for those attributes that
             // will receive user inputs.
             return array(
-                    array('key', 'length', 'max'=>36),
+                    array('licence_key', 'length', 'max'=>36),
                     array('email, full_name, comments', 'length', 'max'=>255),
                     array('username', 'length', 'max'=>100),
                     array('email, username, full_name', 'safe', 'on'=>'search'),
@@ -87,7 +87,7 @@ class Users extends CActiveRecord{
     {
             return array(
                     'id' => Yii::t('AuthModule.forms','ID'),
-                    'key' => Yii::t('AuthModule.forms','Key'),
+                    'licence_key' => Yii::t('AuthModule.forms','Licence key'),
                     'email' => Yii::t('AuthModule.forms','Email'),
                     'username' => Yii::t('AuthModule.forms','Login'),
                     'full_name' => Yii::t('AuthModule.forms','Full name'),

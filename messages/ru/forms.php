@@ -20,7 +20,7 @@
         'GUID'=>'GUID',
         'Exp date'=>'Срок действия',
         'Email'=>'Эл. почта',
-        'Key'=>'Ключ',
+        'Licence key'=>'Лицензионный ключ',
         'Login'=>'Логин',
         'Full name'=>'Ф.И.О.',
         'Registration date'=>'Дата регистрации',
