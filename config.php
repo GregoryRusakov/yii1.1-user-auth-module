@@ -10,7 +10,6 @@
  * http://gregoryrusakov.github.io/yii1.1-auth-module/
  */
 
-
     return array(
         'attemptsBeforeCaptcha'=>2,
         'cookieBasedLoginDays'=>5,
@@ -26,9 +25,4 @@
         'defaultController'=>'user/login',
 
     );
-    
-?>
-
-
-        
-        
+     
