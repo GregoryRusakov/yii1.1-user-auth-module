@@ -72,6 +72,6 @@ Information
 Author: Gregory Rusakov
 e-mail: greg@ontime.email
 
-Current version.: 150307 1731
+Current version.: 150311 1158
 
 <img src="https://ga-beacon.appspot.com/UA-60499668-1/GregoryRusakov/yii1.1-user-auth-module" />
