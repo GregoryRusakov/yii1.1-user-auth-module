@@ -21,8 +21,7 @@ class authWebUser extends CWebUser{
                 return false;
             }
 
-            
-            $model = AdminUsers::model()->findByPk($id);            
+            $model = Users::model()->findByPk($id);            
             if ($model==null){
                 return false;
             }
