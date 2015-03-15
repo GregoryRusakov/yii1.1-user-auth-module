@@ -3,7 +3,7 @@
 ?>
 
 <?php 
-
+    $isAjax=Yii::app()->request->isAjaxRequest;
     if (!isset($model)){
         $model=new LoginForm;
     }
@@ -17,7 +17,17 @@
     FormElements::textField($form, $model, 'username', Yii::t('AuthModule.forms', 'Login. Username placeholder'));
     FormElements::passwordField($form, $model, 'password', Yii::t('AuthModule.forms', 'Login. Password placeholder'));
     FormElements::checkBox($form, $model, 'rememberMe', Yii::t('AuthModule.forms', 'Login. Remember me checkbox'));
-    FormElements::submitButton(Yii::t('AuthModule.forms', 'Login. Submit button'));
+    
+    $buttonLabel=Yii::t('AuthModule.forms', 'Login. Submit button');
+    
+    if (!$isAjax){
+        FormElements::submitButton($buttonLabel);
+    }
+    else{
+        $url=$this->createUrl('login');
+        FormElements::ajaxSubmitPanel($buttonLabel, $url);
+    }
+    
     FormElements::endForm($this);
 
     echo "<br>".CHtml::link(Yii::t('AuthModule.forms', 'Login. Restore password'),array('user/passrequest'));

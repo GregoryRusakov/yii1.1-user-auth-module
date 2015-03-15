@@ -28,6 +28,8 @@ class UserController extends Controller
 
     public function actionLogin(){
                 
+        $isAjax=Yii::app()->request->isAjaxRequest;
+          
         $formLogin=new LoginForm;
         // collect user input data
         if(isset($_POST['LoginForm'])){
@@ -46,27 +48,50 @@ class UserController extends Controller
             }            
             // validate user input and redirect to the previous page if valid
 
-            if($formLogin->validate() && $formLogin->login()){
-                $loggedUserPage=Yii::app()->user->getState('openPageAfterLogin');
-                if ($loggedUserPage==null){
-                    $loggedUserPage=Common::getParam('profilePage');   
+            $validated=$formLogin->validate();
+            $loggedIn=($validated && $formLogin->login());
+            
+            if ($isAjax){
+                if ($loggedIn){
+                    $response=array('status'=>'success', 'message'=>'Successfully logged in');
                 }
-                Yii::app()->user->setState('openPageAfterLogin', null);
-                $this->redirect($loggedUserPage);
+                else{
+                    $response=array('status'=>'error', 'message'=>'Login error');
+                }
+                //create response and end
+                echo CJSON::encode($response);
+                Yii::app()->end();           
             }
             else{
-                if (!Yii::app()->user->hasFlash('error')){
-                    Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Incorrect login or password'));
+                //not ajax
+                if ($loggedIn){
+                    $loggedUserPage=Yii::app()->user->getState('openPageAfterLogin');
+                    if ($loggedUserPage==null){
+                        $loggedUserPage=Common::getParam('profilePage');   
+                    }
+                    Yii::app()->user->setState('openPageAfterLogin', null);
+                    $this->redirect($loggedUserPage);
                 }
-                $this->render('login', array('model'=>$formLogin));
-                return; 
+                else{
+                    if (!Yii::app()->user->hasFlash('error')){
+                        Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Incorrect login or password'));
+                    }
+                    $this->render('login', array('model'=>$formLogin));
+                    return; 
+                }
             }
         }
 
         $username=Yii::app()->user->getState('username');
         $formLogin->username=$username;
         
-        $this->render('login',array('model'=>$formLogin));
+        if ($isAjax){
+            $this->renderPartial('login',array('model'=>$formLogin));
+            //$this->renderPartial('login',array('model'=>$formLogin), false, true);
+        }
+        else{
+            $this->render('login',array('model'=>$formLogin));
+        }
         
     }
 
