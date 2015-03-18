@@ -4,7 +4,7 @@ This module was created to authorize users in Yii 1.1 applications.
 
 Module supports basic authentification, login and password restore procedures.
 
-Module also contains user and ip blocking mechanism to prevent bruteforce attacs.
+Module also contains user and ip blocking mechanism to prevent bruteforce attacks.
 
 You are welcome!
 =============
@@ -70,7 +70,7 @@ d.      'homeUrl'=>array('auth/user/index'),
 Information
 =============
 Author: Gregory Rusakov
-e-mail: greg@ontime.email
+e-mail: greg@analitica.ru
 
 Current version.: 150311 1158
 
