@@ -24,7 +24,6 @@
  * http://gregoryrusakov.github.io/yii1.1-auth-module/
  */
 
-
 class FormElements{
     
     public function startForm($id='form', $ajaxValidation=false){
@@ -137,7 +136,7 @@ class FormElements{
         echo '</div>';
     }
     
-      public function ajaxSubmitPanel($form, $buttonLabel, $url, $messageFormId='ajaxFormMessage'){
+    public function ajaxSubmitPanel($form, $buttonLabel, $url, $messageFormId='ajaxFormMessage'){
         echo '<div class="form-group">
             <label class="control-label col-sm-2 ajax-form-label"></label>
             <div class="col-sm-10">';
@@ -152,7 +151,7 @@ class FormElements{
                                         window.location.reload();
                                         return;
                                     }
-                                    var event = new CustomEvent(response.action, {detail: {id: response.id, username: response.username}});
+                                    var event = new CustomEvent(response.event, {detail: {id: response.id, username: response.username}});
                                     document.dispatchEvent(event);
                                 }else{
                                     alert('Error: '+response.id);
@@ -169,6 +168,4 @@ class FormElements{
         echo  CHtml::htmlButton('Cancel', array('class'=>'btn btn-default', 'data-dismiss'=>'modal'));
         echo '</div></div>';
     }
-        
-    
 }
