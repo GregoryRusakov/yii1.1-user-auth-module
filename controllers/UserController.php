@@ -53,7 +53,7 @@ class UserController extends Controller
             
             if ($isAjax){
                 if ($loggedIn){
-                    $response=array('status'=>'success', 'message'=>'Successfully logged in');
+                    $response=array('status'=>'success', 'action'=>'reload');
                 }
                 else{
                     $response=array('status'=>'error', 'message'=>'Login error');

@@ -137,7 +137,7 @@ class FormElements{
         echo '</div>';
     }
     
-    public function ajaxSubmitPanel($form, $buttonLabel, $url, $messageFormId='ajaxFormMessage'){
+      public function ajaxSubmitPanel($form, $buttonLabel, $url, $messageFormId='ajaxFormMessage'){
         echo '<div class="form-group">
             <label class="control-label col-sm-2 ajax-form-label"></label>
             <div class="col-sm-10">';
@@ -148,23 +148,27 @@ class FormElements{
                                 var response=$.parseJSON(data);
                                 $('#ajaxFormMessage').text(response.message);
                                 if (response.status==='success'){
-                                    var event = new CustomEvent('UserCreated', {detail: {id: response.id, username: response.username}});
+                                    if (response.action==='reload'){
+                                        window.location.reload();
+                                        return;
+                                    }
+                                    var event = new CustomEvent(response.action, {detail: {id: response.id, username: response.username}});
                                     document.dispatchEvent(event);
                                 }else{
                                     alert('Error: '+response.id);
                                 }
-                            },'url':'/trader-news.ru/index.php?r=admin/AdminUsers/create',
+                            },'url':'".$url."',
                             'cache':false,
                             'data':jQuery('#".$form->id."').serialize()
                             });
                             return false;});
 
             </script>";
-       
-            echo '<span class="margin-left-mini"></span>';
-            echo  CHtml::htmlButton('Cancel', array('class'=>'btn btn-default', 'data-dismiss'=>'modal'));
-            echo '</div></div>';
+  
+        echo '<span class="margin-left-mini"></span>';
+        echo  CHtml::htmlButton('Cancel', array('class'=>'btn btn-default', 'data-dismiss'=>'modal'));
+        echo '</div></div>';
     }
-    
+        
     
 }
