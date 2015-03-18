@@ -86,8 +86,8 @@ class UserController extends Controller
         $formLogin->username=$username;
         
         if ($isAjax){
-            $this->renderPartial('login',array('model'=>$formLogin));
-            //$this->renderPartial('login',array('model'=>$formLogin), false, true);
+            //$this->renderPartial('login',array('model'=>$formLogin));
+            $this->renderPartial('login',array('model'=>$formLogin), false, true);
         }
         else{
             $this->render('login',array('model'=>$formLogin));

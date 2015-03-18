@@ -25,7 +25,7 @@
     }
     else{
         $url=$this->createUrl('login');
-        FormElements::ajaxSubmitPanel($buttonLabel, $url);
+        FormElements::ajaxSubmitPanel($form, $buttonLabel, $url);
     }
     
     FormElements::endForm($this);

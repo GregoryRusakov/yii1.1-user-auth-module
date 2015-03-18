@@ -67,6 +67,8 @@ d.      'homeUrl'=>array('auth/user/index'),
 
 6.  You can change default layout for module pages in auth/components/Controller.php
 
+7.  Rename file to FormElements_rename.php to FormElements.php before use it with this module
+
 Information
 =============
 Author: Gregory Rusakov
