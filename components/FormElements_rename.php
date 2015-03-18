@@ -24,7 +24,7 @@
  * http://gregoryrusakov.github.io/yii1.1-auth-module/
  */
 
-class FormElements{
+class FormElements_rename{
     
     public function startForm($id='form', $ajaxValidation=false){
 
@@ -147,7 +147,7 @@ class FormElements{
                                 var response=$.parseJSON(data);
                                 $('#ajaxFormMessage').text(response.message);
                                 if (response.status==='success'){
-                                    if (response.action==='reload'){
+                                    if (response.event==='reload'){
                                         window.location.reload();
                                         return;
                                     }
