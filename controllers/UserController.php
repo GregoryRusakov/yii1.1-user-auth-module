@@ -448,6 +448,7 @@ class UserController extends Controller
         );
     }       
 
+    /*
     public function beforeAction(CAction $action){        
 
         $controller=$action->controller->id;
@@ -473,5 +474,7 @@ class UserController extends Controller
         
         return true;
     }
+     * 
+     */
 
 }

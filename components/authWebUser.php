@@ -34,18 +34,7 @@ class authWebUser extends CWebUser{
                 return false;
             }
 
-            //check if user is blocked, deleted or not activated yet
-            if (!$model->activated){
-                //user not activated
-                return false;
-            }
-
-            if ($model->deleted){
-                //user deleted
-                return false;
-            }
-
-            if ($model->blocked){
+            if (!$model->activated || $model->blocked || $model->deleted){
                 //user deleted
                 return false;
             }

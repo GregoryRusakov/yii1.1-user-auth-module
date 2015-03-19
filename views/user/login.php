@@ -1,9 +1,9 @@
 <?php
+   
     $this->pageTitle=Yii::t('AuthModule.forms', 'Login. Title');
-?>
 
-<?php 
     $isAjax=Yii::app()->request->isAjaxRequest;
+    
     if (!isset($model)){
         $model=new LoginForm;
     }
@@ -11,6 +11,10 @@
     if (isset($username)){
         $model->username=$username;
     }    
+    
+    if ($isAjax){
+        echo '<div id="modalFormError" class="modal-form-error"></div>';
+    }
     
     $form=FormElements::startForm();
     FormElements::showErrors($form, $model, Yii::t('AuthModule.forms', 'Login. Login failure'));
@@ -35,7 +39,4 @@
     echo "<br><br>";
 
     echo "<div>".CHtml::link(Yii::t('AuthModule.forms', 'Login. Register user'), array('user/registration'))."</div>";
-
-?>
-
 

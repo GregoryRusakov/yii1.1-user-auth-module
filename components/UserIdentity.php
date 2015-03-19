@@ -13,6 +13,7 @@
 class UserIdentity extends CUserIdentity
 {
         private $_id;
+        private $_username;
         
         const LOGIN_TOKEN="logintoken";
         
@@ -27,7 +28,6 @@ class UserIdentity extends CUserIdentity
 	public function authenticate()
 	{
             
-            //$ip=Yii::app()->request->getUserHostAddress();
             $ip=Common::getUserIp();
             
             $timeZoneLabel=Common::getParam('timeZoneLabel');
@@ -100,7 +100,10 @@ class UserIdentity extends CUserIdentity
             
             //login OK
             $this->errorCode=self::ERROR_NONE;
+            
             $this->_id=$modelUser->id;
+            $this->_username=$modelUser->username;
+            
             $this->saveSuccessfulUserAttemt($modelUser);
             $this->saveSuccessfulIpAttemt($ip);
 
@@ -122,6 +125,10 @@ class UserIdentity extends CUserIdentity
         public function getId(){
             return $this->_id;
         }
+         
+        public function getUsername(){
+            return $this->_username;
+        }       
         
         public function saveUnsuccessfulUserAttempt($userModel){
  

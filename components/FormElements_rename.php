@@ -143,7 +143,8 @@ class FormElements_rename{
         
         echo "<input class='btn btn-primary' name='btSubmit' type='submit' value='".$buttonLabel."' id='btSubmit' />
             <script type='text/javascript'>
-            jQuery('body').on('click','#btSubmit',function(){jQuery.ajax({'type':'POST','success':function(data){
+            jQuery('body').on('click','#btSubmit',
+                        function(){jQuery.ajax({'type':'POST','success':function(data){
                                 var response=$.parseJSON(data);
                                 $('#ajaxFormMessage').text(response.message);
                                 if (response.status==='success'){
@@ -151,7 +152,15 @@ class FormElements_rename{
                                         window.location.reload();
                                         return;
                                     }
-                                    var event = new CustomEvent(response.event, {detail: {id: response.id, username: response.username}});
+                                    var event = new CustomEvent(
+                                        response.event, 
+                                        {detail: {
+                                            id: response.id, 
+                                            name: response.name,
+                                            message: response.message,
+                                            }
+                                        });
+                                        
                                     document.dispatchEvent(event);
                                 }else{
                                     alert('Error: '+response.id);
@@ -160,7 +169,8 @@ class FormElements_rename{
                             'cache':false,
                             'data':jQuery('#".$form->id."').serialize()
                             });
-                            return false;});
+                            return false;
+                        });
 
             </script>";
   
