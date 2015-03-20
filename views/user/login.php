@@ -12,11 +12,8 @@
         $model->username=$username;
     }    
     
-    if ($isAjax){
-        echo '<div id="modalFormError" class="modal-form-error"></div>';
-    }
-    
     $form=FormElements::startForm();
+    
     FormElements::showErrors($form, $model, Yii::t('AuthModule.forms', 'Login. Login failure'));
     FormElements::textField($form, $model, 'username', Yii::t('AuthModule.forms', 'Login. Username placeholder'));
     FormElements::passwordField($form, $model, 'password', Yii::t('AuthModule.forms', 'Login. Password placeholder'));

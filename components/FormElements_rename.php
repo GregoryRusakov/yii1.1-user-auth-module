@@ -148,7 +148,7 @@ class FormElements_rename{
                                 var response=$.parseJSON(data);
                                 $('#ajaxFormMessage').text(response.message);
                                 if (response.status==='success'){
-                                    if (response.event==='reload'){
+                                    if (response.event==='LoggedIn'){
                                         window.location.reload();
                                         return;
                                     }

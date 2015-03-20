@@ -63,7 +63,7 @@
         'Password change. Password placeholder'=>'Enter new password',
         'Password change. Guid placeholder'=>'Enter key from email',
         'Password change. Submit button'=>'Set password',        
-        'Password restore. Title'=>'Restores user password',
+        'Password restore. Title'=>'Restore user password',
         'Password restore. Email placeholder'=>'Enter user email',
         'Password restore. Submit button'=>'Restore password',
         'Error. Title'=>'Error',

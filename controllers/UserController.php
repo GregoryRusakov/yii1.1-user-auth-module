@@ -53,7 +53,7 @@ class UserController extends Controller
             
             if ($isAjax){
                 if ($loggedIn){
-                    $response=array('status'=>'success', 'event'=>'reload');
+                    $response=array('status'=>'success', 'event'=>'LoggedIn');
                 }
                 else{
                     $response=array('status'=>'error', 'message'=>'Login error');
@@ -67,6 +67,12 @@ class UserController extends Controller
                 if ($loggedIn){
                     $loggedUserPage=Yii::app()->user->getState('openPageAfterLogin');
                     if ($loggedUserPage==null){
+                        //we are not specifed manually page to return,
+                        //so try to get standard return page
+                        $loggedUserPage=Yii::app()->user->returnUrl;
+                    }
+                    if ($loggedUserPage==null){
+                        //go to profile page
                         $loggedUserPage=Common::getParam('profilePage');   
                     }
                     Yii::app()->user->setState('openPageAfterLogin', null);
@@ -82,7 +88,7 @@ class UserController extends Controller
             }
         }
 
-        $username=Yii::app()->user->getState('username');
+        $username=Yii::app()->user->getState('formUusername');
         $formLogin->username=$username;
         
         if ($isAjax){
@@ -135,7 +141,7 @@ class UserController extends Controller
             $email=$model->email;
             $user_id=$model->id;
 
-            Yii::app()->user->setState('username', $model->username);
+            Yii::app()->user->setState('formUsername', $model->username);
 
             $guid=Common::getGUID();
 
@@ -360,7 +366,7 @@ class UserController extends Controller
             if ($modelUser->saveModel()){
                 yii::app()->user->setFlash('success', Yii::t('AuthModule.main','Password successfully changed'));
                 $this->deleteRestoreGuid($guid, self::VALIDATOR_RESTORE);
-                $username=Yii::app()->user->setState('username', $modelUser->username);
+                $username=Yii::app()->user->setState('formUsername', $modelUser->username);
                 $this->redirect(array('user/login'));
             }
             else{
