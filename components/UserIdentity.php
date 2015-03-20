@@ -99,6 +99,9 @@ class UserIdentity extends CUserIdentity
             }
             
             //login OK
+            
+            Yii::app()->user->setState('username', $modelUser->username);
+            
             $this->errorCode=self::ERROR_NONE;
             
             $this->_id=$modelUser->id;
