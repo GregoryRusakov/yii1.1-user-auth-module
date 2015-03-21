@@ -4,14 +4,13 @@ class uniqueUsername extends CValidator
 {
     protected function validateAttribute($object,$attribute){
         
-        if (empty($object->usrname)){
+        if (empty($object->username)){
             return;
         }
         
         $modelFound=$object->getByUserName($object->username);
-        if ($modelFound!=null && ($modelFound->id!=$this->id)){
-            $object->addError($attribute, $params['message']);
+        if ($modelFound!=null && ($modelFound->id!=$object->id)){
+            $object->addError($attribute, $this->message);
         }
-        
     }
 }

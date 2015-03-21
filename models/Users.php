@@ -14,7 +14,6 @@
  * This is the model class for table "users".
  */
 
-
 class Users extends CActiveRecord{
     public $password_entered;
     public $password_initial;
@@ -45,10 +44,6 @@ class Users extends CActiveRecord{
                     array('email', 'email'),
                     array('username, email', 'required', 'on'=>'insert, update'),
 
-                    //array('email', 'uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
-                    //array('username', 'uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
-                    //array('password_entered', 'passwordStrength', 'except'=>'passRestore, activation, update, lastlogin'),
- 
                     array('password_entered', 'modules.auth.components.validators.passValidator', 'except'=>'passRestore, activation, update, lastlogin'),
                     array('email', 'modules.auth.components.validators.uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
                     array('username', 'modules.auth.components.validators.uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
@@ -196,8 +191,8 @@ class Users extends CActiveRecord{
         //$model=$this->findByAttributes(array('username'=>$username));
         return $model;
     }
-
-    /*public function uniqueEmail($attribute, $params){
+/*
+    public function uniqueEmail($attribute, $params){
         if (empty($this->email)){
             return;
         }
@@ -215,8 +210,8 @@ class Users extends CActiveRecord{
         if ($modelFound!=null && ($modelFound->id!=$this->id)){
             $this->addError($attribute, $params['message']);
         }
-    }*/
-
+    }
+*/
   /*  public function passwordStrength($attribute){
         $passStrength=Yii::app()->params['passStrength'];
         if ($passStrength==null){
