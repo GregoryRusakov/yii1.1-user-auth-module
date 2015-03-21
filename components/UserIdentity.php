@@ -100,8 +100,6 @@ class UserIdentity extends CUserIdentity
             
             //login OK
             
-            Yii::app()->user->setState('username', $modelUser->username);
-            
             $this->errorCode=self::ERROR_NONE;
             
             $this->_id=$modelUser->id;
@@ -129,10 +127,6 @@ class UserIdentity extends CUserIdentity
             return $this->_id;
         }
          
-        public function getUsername(){
-            return $this->_username;
-        }       
-        
         public function saveUnsuccessfulUserAttempt($userModel){
  
             $userBlockedUntil=null;
