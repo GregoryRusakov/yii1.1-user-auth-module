@@ -12,7 +12,7 @@
         $model->username=$username;
     }    
     
-    $form=FormElements::startForm();
+    $form=FormElements::startForm('user-login', true);
     
     FormElements::showErrors($form, $model, Yii::t('AuthModule.forms', 'Login. Login failure'));
     FormElements::textField($form, $model, 'username', Yii::t('AuthModule.forms', 'Login. Username placeholder'));

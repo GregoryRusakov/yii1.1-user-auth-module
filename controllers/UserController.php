@@ -31,6 +31,8 @@ class UserController extends Controller
         $isAjax=Yii::app()->request->isAjaxRequest;
           
         $formLogin=new LoginForm;
+        $this->performAjaxValidation($formLogin);
+        
         // collect user input data
         if(isset($_POST['LoginForm'])){
             
@@ -454,33 +456,27 @@ class UserController extends Controller
         );
     }       
 
-    /*
-    public function beforeAction(CAction $action){        
-
-        $controller=$action->controller->id;
-        $currentAction=$action->id;
-      
-        if(Yii::app()->user->isGuest){
-            if ($controller=='user'){
-               
-                $pagesAllowedForGuest=array('login','registration','passrequest','passchange','captcha', 'activation', 'test');
-                
-                if (!in_array($currentAction, $pagesAllowedForGuest)){
-                    Yii::app()->user->setFlash('info', Yii::t('AuthModule.main','Requested page require authorization'));
-                    $returnUrl=Yii::app()->createUrl($controller."/".$currentAction);
-                    Yii::app()->user->setState('openPageAfterLogin',$returnUrl);
-                    Yii::app()->user->loginRequired();
-               }
-           }
-        }
-        elseif($controller=='user' && $currentAction=='login'){
-            Yii::app()->user->setFlash('info', Yii::t('AuthModule.main','Requested page is not available in this mode')); 
-            $this->redirect(Yii::app()->getHomeUrl());
-        }
-        
-        return true;
-    }
-     * 
+    /**
+     * Performs the AJAX validation.
+     * @param AdminUsers $model the model to be validated
      */
+    protected function performAjaxValidation($model)
+    {
+            if(isset($_POST['ajax']) && $_POST['ajax']==='user-login'){
+                $response=CActiveForm::validate($model);
+                if (Yii::app()->user->hasFlash('error')){
+                    $flashError=Yii::app()->user->getFlash('error'); 
+                    $flashArray=array('status'=>'error', 'message'=>$flashError);
+                    $validateArray=CJSON::decode($response);
+                    $response=CJSON::encode(array_merge($flashArray, $validateArray));
+                }
 
+                if ($response!='[]'){
+                    //some errors, so we stop next processing and print post data
+                    echo $response;
+                    Yii::app()->end();
+                }
+            }
+
+    }
 }
