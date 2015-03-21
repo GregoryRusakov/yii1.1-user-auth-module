@@ -48,7 +48,7 @@ class Users extends CActiveRecord{
                     //array('email', 'uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
                     //array('username', 'uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
                     //array('password_entered', 'passwordStrength', 'except'=>'passRestore, activation, update, lastlogin'),
-
+ 
                     array('password_entered', 'modules.auth.components.validators.passValidator', 'except'=>'passRestore, activation, update, lastlogin'),
                     array('email', 'modules.auth.components.validators.uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
                     array('username', 'modules.auth.components.validators.uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
