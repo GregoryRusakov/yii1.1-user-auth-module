@@ -12,18 +12,6 @@
 
 /**
  * This is the model class for table "users".
- *
- * The followings are the available columns in table 'users':
- * @property integer $id
- * @property string $licence_key
- * @property string $email
- * @property string $username
- * @property string $fullname
- * @property string $reg_date
- * @property string #activated
- * @property string $deleted
- * @property string #ip_endorsed
- * @property string $comments
  */
 
 
@@ -57,9 +45,13 @@ class Users extends CActiveRecord{
                     array('email', 'email'),
                     array('username, email', 'required', 'on'=>'insert, update'),
 
-                    array('email', 'uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
-                    array('username', 'uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
-                    array('password_entered', 'passwordStrength', 'except'=>'passRestore, activation, update, lastlogin'),
+                    //array('email', 'uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
+                    //array('username', 'uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
+                    //array('password_entered', 'passwordStrength', 'except'=>'passRestore, activation, update, lastlogin'),
+
+                    array('password_entered', 'modules.auth.components.validators.passValidator', 'except'=>'passRestore, activation, update, lastlogin'),
+                    array('email', 'modules.auth.components.validators.uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
+                    array('username', 'modules.auth.components.validators.uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
                     
                     array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastlogin'),
 
@@ -205,7 +197,7 @@ class Users extends CActiveRecord{
         return $model;
     }
 
-    public function uniqueEmail($attribute, $params){
+    /*public function uniqueEmail($attribute, $params){
         if (empty($this->email)){
             return;
         }
@@ -223,9 +215,9 @@ class Users extends CActiveRecord{
         if ($modelFound!=null && ($modelFound->id!=$this->id)){
             $this->addError($attribute, $params['message']);
         }
-    }
+    }*/
 
-    public function passwordStrength($attribute){
+  /*  public function passwordStrength($attribute){
         $passStrength=Yii::app()->params['passStrength'];
         if ($passStrength==null){
             $passStrength=0;
@@ -244,5 +236,6 @@ class Users extends CActiveRecord{
           $this->addError($attribute, $message);
         }
     }
-
+*/
+    
 }
