@@ -8,7 +8,7 @@ class uniqueEmail extends CValidator
             return;
         }
         
-        $modelFound=$object->getByEmail($object->email);
+        $modelFound=Users::model()->getByEmail($object->email);
         if ($modelFound!=null && ($modelFound->id!=$object->id)){
             $object->addError($attribute, $this->message);
         }

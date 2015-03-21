@@ -14,6 +14,8 @@
  * This is the model class for table "users".
  */
 
+Yii::import('auth.components.validators.*');
+    
 class Users extends CActiveRecord{
     public $password_entered;
     public $password_initial;
@@ -44,9 +46,9 @@ class Users extends CActiveRecord{
                     array('email', 'email'),
                     array('username, email', 'required', 'on'=>'insert, update'),
 
-                    array('password_entered', 'modules.auth.components.validators.passValidator', 'except'=>'passRestore, activation, update, lastlogin'),
-                    array('email', 'modules.auth.components.validators.uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
-                    array('username', 'modules.auth.components.validators.uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
+                    array('password_entered', 'passValidator', 'except'=>'passRestore, activation, update, lastlogin'),
+                    array('email', 'uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
+                    array('username', 'uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
                     
                     array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastlogin'),
 

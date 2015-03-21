@@ -40,7 +40,6 @@ class AuthModule extends CWebModule
 			'auth.models.*',
                         'auth.models.forms.*',
 			'auth.components.*',
-                    
 		));
               
                 if ($this->dateFormat==null){
