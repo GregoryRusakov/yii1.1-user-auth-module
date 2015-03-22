@@ -176,7 +176,7 @@ class Users extends CActiveRecord{
         $criteria=new CDbCriteria;
         $criteria->select = 'email,id';
         $criteria->limit=1;
-        $criteria->compare('LOWER(email)',strtolower($email)); 
+        $criteria->compare('LOWER(email)',strtolower($email), false); 
         $model=$this->find($criteria);
             
         return $model;
@@ -187,7 +187,7 @@ class Users extends CActiveRecord{
         $criteria=new CDbCriteria;
         $criteria->select = '*';
         $criteria->limit=1;
-        $criteria->compare('LOWER(username)',strtolower($username)); 
+        $criteria->compare('LOWER(username)',strtolower($username), false); 
         $model=$this->find($criteria);
         
         //$model=$this->findByAttributes(array('username'=>$username));

@@ -3,6 +3,7 @@
 class passValidator extends CValidator
 {
     protected function validateAttribute($object,$attribute){
+        
         $passStrength=Yii::app()->params['passStrength'];
         if ($passStrength==null){
             $passStrength=0;
