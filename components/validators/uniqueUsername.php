@@ -8,7 +8,7 @@ class uniqueUsername extends CValidator
             return;
         }
         
-        $modelFound=Users::modules()->getByUserName($object->username);
+        $modelFound=Users::model()->getByUserName($object->username);
         if ($modelFound!=null && ($modelFound->id!=$object->id)){
             $object->addError($attribute, $this->message);
         }

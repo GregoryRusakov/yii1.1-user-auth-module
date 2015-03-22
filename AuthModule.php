@@ -32,38 +32,27 @@ class AuthModule extends CWebModule
         
 	public function init()
 	{
-		// this method is called when the module is being created
-		// you may place code here to customize the module or the application
+            // this method is called when the module is being created
+            // you may place code here to customize the module or the application
 
-		// import the module-level models and components
-		$this->setImport(array(
-			'auth.models.*',
-                        'auth.models.forms.*',
-			'auth.components.*',
-		));
-              
-                if ($this->dateFormat==null){
-                    try{
-                        $value=Yii::app()->params[$paramName];
-                        $this->dateFormat=$value;
-                    }catch(Exception $ex){
-                        //nothing to do because parameter in application is apsent
-                        $ex=null;
-                        $this->dateFormat='Y-m-d H:i:s';
-                    
-                    }
-                    
-                    
+            // import the module-level models and components
+            $this->setImport(array(
+                    'auth.models.*',
+                    'auth.models.forms.*',
+                    'auth.components.*',
+            ));
+
+            if ($this->dateFormat==null){
+                try{
+                    $value=Yii::app()->params[$paramName];
+                    $this->dateFormat=$value;
+                }catch(Exception $ex){
+                    //nothing to do because parameter in application is apsent
+                    $ex=null;
+                    $this->dateFormat='Y-m-d H:i:s';
+
                 }
-                
-                /*
-                Yii::app()->setComponents(          
-                        array('messages' => array(
-                                'class'=>'CPhpMessageSource',
-                                'basePath'=>'protected/modules/auth/messages',
-                        )));
-                 */
-                
+            }
 	}
         
     
