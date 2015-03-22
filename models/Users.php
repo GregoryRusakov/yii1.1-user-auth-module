@@ -43,7 +43,7 @@ class Users extends CActiveRecord{
                     array('email, username, full_name', 'safe', 'on'=>'search'),
 
                     array('password_entered', 'safe'),
-                    array('email', 'email'),
+                    array('email', 'email', 'except'=>'lastlogin'),
                     array('username, email', 'required', 'on'=>'insert, update'),
 
                     array('password_entered', 'passValidator', 'except'=>'passRestore, activation, update, lastlogin'),

@@ -462,8 +462,11 @@ class UserController extends Controller
      */
     protected function performAjaxValidation($model)
     {
+            //Yii::app()->user->setFlash('error',''); //clear flash messages
+            
             if(isset($_POST['ajax']) && $_POST['ajax']==='user-login'){
                 $response=CActiveForm::validate($model);
+                //Yii::app()->user->('error',''); //clear flash messages
                 if (Yii::app()->user->hasFlash('error')){
                     $flashError=Yii::app()->user->getFlash('error'); 
                     $flashArray=array('status'=>'error', 'message'=>$flashError);
