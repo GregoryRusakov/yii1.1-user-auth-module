@@ -120,6 +120,9 @@ class UserIdentity extends CUserIdentity
             else{
                 yii::app()->user->setFlash('error', CHtml::errorSummary($modelUser));
             }
+            
+             $this->setState('username', $modelUser->username);
+             
             return true;
 	}
         

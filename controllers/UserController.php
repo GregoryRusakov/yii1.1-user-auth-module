@@ -490,12 +490,6 @@ class UserController extends Controller
     {
             
             if(isset($_POST['ajax']) && $_POST['ajax']==='user-login'){
-                /*$loginAtteptsInSession=(int)(Yii::app()->session['loginAtteptsInSession']);
-                $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
-                if ($maxAttemptsBeforeCaptha!=0 && $loginAtteptsInSession>$maxAttemptsBeforeCaptha){
-                    $model->scenario='withCaptcha';
-                }
-                Yii::app()->session['loginAtteptsInSession']=++$loginAtteptsInSession;*/
 
                 $response=CActiveForm::validate($model);
                 $responseArray=CJSON::decode($response);
