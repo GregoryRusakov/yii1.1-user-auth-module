@@ -174,12 +174,22 @@ class Users extends CActiveRecord{
     public function getByEmail($email)
     {
         $criteria=new CDbCriteria;
-        $criteria->select = 'email,id';
+        $criteria->select = 'email, id, username';
         $criteria->limit=1;
         $criteria->compare('LOWER(email)',strtolower($email), false); 
         $model=$this->find($criteria);
-            
+        
+        /*
+        $query="SELECT email FROM user_info WHERE email='".$email."'";
+        $result=mysql_query($query) or die("email cannot be added".mysql_error());
+        if(mysql_num_rows($result) > 0)
+        {
+            die(" Sorry that user " .$email. " already exists ! <br>");
+        }
+        */
+        
         return $model;
+        
     }
 
     public function getByUserName($username)
