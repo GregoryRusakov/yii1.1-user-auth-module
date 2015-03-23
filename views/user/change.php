@@ -28,7 +28,7 @@
         FormElements::textField($form, $model, 'email', Yii::t('AuthModule.forms', 'User form. Email placeholder'));
         FormElements::textField($form, $model, 'full_name', Yii::t('AuthModule.forms', 'User form. Fullname placeholder'));
         FormElements::passwordField($form, $model, 'password_entered', Yii::t('AuthModule.forms', 'User form. Password placeholder'));
-        FormElements::capthaField($model, 'verifyCode');
+        FormElements::capthaField($form, $model, 'verifyCode');
         if ($isNewRecord){
             FormElements::submitButton(Yii::t('AuthModule.forms', 'Registration form. Submit button'));
         }

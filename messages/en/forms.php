@@ -22,6 +22,7 @@
         'Exp date'=>'Expiration date',
         'Email'=>'Email',
         'Licence key'=>'Licence key',
+        'verifyCode'=>'Verification code',
         'Login'=>'Login',
         'Full name'=>'Full name',
         'Registration date'=>'Registration date',

@@ -49,12 +49,11 @@ class Users extends CActiveRecord{
                     array('password_entered', 'passValidator', 'except'=>'passRestore, activation, update, lastlogin'),
                     array('email', 'uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
                     array('username', 'uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
-                    
-                    array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastlogin'),
 
                     array('username', 'safe', 'except'=>'update'),
                     array('username', 'unsafe', 'on'=>'update'),
-
+                                  
+                    array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastlogin'),
             );
     }
 

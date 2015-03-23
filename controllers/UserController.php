@@ -31,12 +31,27 @@ class UserController extends Controller
         $isAjax=Yii::app()->request->isAjaxRequest;
           
         $formLogin=new LoginForm;
-        $this->performAjaxValidation($formLogin);
         
         // collect user input data
         if(isset($_POST['LoginForm'])){
-            
+
             $formLogin->attributes=$_POST['LoginForm'];
+            
+            // validate user input and redirect to the previous page if valid
+            $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
+            if ($maxAttemptsBeforeCaptha!=0){
+                $loginAtteptsInSession=(int)Yii::app()->session['loginAtteptsInSession'];
+
+                if ($loginAtteptsInSession>$maxAttemptsBeforeCaptha) { 
+                    $formLogin->scenario = 'withCaptcha';
+                }   
+
+                Yii::app()->session['loginAtteptsInSession']=++$loginAtteptsInSession;
+                
+            }                  
+            
+            $this->performAjaxValidation($formLogin);          
+              
             if(empty($formLogin->username)){
                 Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Empty login'));
                 $this->render('login', array('model'=>$formLogin));
@@ -48,10 +63,13 @@ class UserController extends Controller
                 $this->render('login', array('model'=>$formLogin));
                 return;   
             }            
-            // validate user input and redirect to the previous page if valid
-
+            
             $validated=$formLogin->validate();
             $loggedIn=($validated && $formLogin->login());
+            
+            if ($loggedIn){
+                unset(Yii::app()->session['loginAtteptsInSession']);
+            }
             
             if ($isAjax){
                 if ($loggedIn){
@@ -81,6 +99,7 @@ class UserController extends Controller
                     $this->redirect($loggedUserPage);
                 }
                 else{
+                    //hot logged in
                     if (!Yii::app()->user->hasFlash('error')){
                         Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Incorrect login or password'));
                     }
@@ -90,7 +109,14 @@ class UserController extends Controller
             }
         }
 
-        $username=Yii::app()->user->getState('formUusername');
+        //check if we need captha field
+        $maxAttemptsBeforeCaptha=Common::getParam('attemptsBeforeCaptcha');
+        $loginAtteptsInSession=(int)Yii::app()->session['loginAtteptsInSession'];
+        if ($loginAtteptsInSession>$maxAttemptsBeforeCaptha) { 
+            $formLogin->scenario = 'withCaptcha';
+        }   
+        
+        $username=Yii::app()->user->getState('formUsername');
         $formLogin->username=$username;
         
         if ($isAjax){
@@ -462,22 +488,47 @@ class UserController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-            //Yii::app()->user->setFlash('error',''); //clear flash messages
             
             if(isset($_POST['ajax']) && $_POST['ajax']==='user-login'){
+                /*$loginAtteptsInSession=(int)(Yii::app()->session['loginAtteptsInSession']);
+                $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
+                if ($maxAttemptsBeforeCaptha!=0 && $loginAtteptsInSession>$maxAttemptsBeforeCaptha){
+                    $model->scenario='withCaptcha';
+                }
+                Yii::app()->session['loginAtteptsInSession']=++$loginAtteptsInSession;*/
+
                 $response=CActiveForm::validate($model);
+                $responseArray=CJSON::decode($response);
                 //Yii::app()->user->('error',''); //clear flash messages
                 if (Yii::app()->user->hasFlash('error')){
-                    $flashError=Yii::app()->user->getFlash('error'); 
+                    $flashError='';
+                    foreach(Yii::app()->user->getFlashes() as $key => $message) {
+                        if ($key==='error'){
+                            $flashError.=$message . '<br>';
+                        }
+                    }
+                    //$flashError=Yii::app()->user->getFlash('error'); 
                     $flashArray=array('status'=>'error', 'message'=>$flashError);
-                    $validateArray=CJSON::decode($response);
-                    $response=CJSON::encode(array_merge($flashArray, $validateArray));
+                    $responseArray=array_merge($responseArray, $flashArray);
                 }
 
                 if ($response!='[]'){
                     //some errors, so we stop next processing and print post data
+                    $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
+                    if ($maxAttemptsBeforeCaptha!=0){
+                        $loginAtteptsInSession=(int)Yii::app()->session['loginAtteptsInSession'];
+                        if ($loginAtteptsInSession>$maxAttemptsBeforeCaptha){
+                            $capthaArray=array('captcha'=>'on');
+                            $responseArray=array_merge($responseArray, $capthaArray);
+                        }
+                    }
+                    $response=CJSON::encode($responseArray);
+                    
                     echo $response;
                     Yii::app()->end();
+                }
+                else{
+                    unset(Yii::app()->session['loginAtteptsInSession']);
                 }
             }
 

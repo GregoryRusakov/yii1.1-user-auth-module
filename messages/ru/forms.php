@@ -21,6 +21,7 @@
         'Exp date'=>'Срок действия',
         'Email'=>'Эл. почта',
         'Licence key'=>'Лицензионный ключ',
+        'verifyCode'=>'Код проверки',
         'Login'=>'Логин',
         'Full name'=>'Ф.И.О.',
         'Registration date'=>'Дата регистрации',

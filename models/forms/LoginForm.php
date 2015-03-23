@@ -15,6 +15,7 @@ class LoginForm extends CFormModel
 	public $username;
 	public $password;
 	public $rememberMe;
+        public $verifyCode;
 
 	private $_identity;
         
@@ -26,6 +27,10 @@ class LoginForm extends CFormModel
 	public function rules()
 	{
 		return array(
+                        array('verifyCode', 'required', 'on' => 'withCaptcha'),
+                        array('verifyCode', 'captcha', 'allowEmpty' => !CCaptcha::checkRequirements(), 'on' => 'withCaptcha'),
+                        array('verifyCode', 'safe'),
+                    
 			array('username, password', 'required'),
 			array('rememberMe', 'boolean'),
 			array('password', 'authenticatePass'),
@@ -41,6 +46,7 @@ class LoginForm extends CFormModel
 			'rememberMe'=>Yii::t('AuthModule.forms','Remember me'),
                         'username'=>Yii::t('AuthModule.forms','Username'),
                         'password'=>Yii::t('AuthModule.forms','Password'),
+                        'verifyCode'=>Yii::t('AuthModule.forms','verifyCode'),
 		);
 	}
 

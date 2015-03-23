@@ -13,9 +13,9 @@
     return array(
         'attemptsBeforeCaptcha'=>2,
         'cookieBasedLoginDays'=>5,
-        'userBlockMaxLoginAttempts'=>3,
+        'userBlockMaxLoginAttempts'=>50,
         'userBlockTimeMinutes'=>30,
-        'ipBlockMaxLoginAttempts'=>5,
+        'ipBlockMaxLoginAttempts'=>70,
         'ipBlockTimeMinutes'=>30,              
         'dateFormat'=>'Y-m-d H:i:s',              
         'timeZoneLabel'=>'МСК',     

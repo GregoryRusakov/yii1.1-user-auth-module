@@ -18,6 +18,13 @@
     FormElements::textField($form, $model, 'username', Yii::t('AuthModule.forms', 'Login. Username placeholder'));
     FormElements::passwordField($form, $model, 'password', Yii::t('AuthModule.forms', 'Login. Password placeholder'));
     FormElements::checkBox($form, $model, 'rememberMe', Yii::t('AuthModule.forms', 'Login. Remember me checkbox'));
+    FormElements::capthaField($form, $model, 'verifyCode');
+    
+    if ($model->scenario!='withCaptcha'){
+        Yii::app()->clientScript->registerScript("captcha", "
+                $('#captcha').hide();
+            ");
+    }
     
     $buttonLabel=Yii::t('AuthModule.forms', 'Login. Submit button');
     
