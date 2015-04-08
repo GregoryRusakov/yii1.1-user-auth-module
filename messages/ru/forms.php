@@ -26,7 +26,7 @@
         'Full name'=>'Ф.И.О.',
         'Registration date'=>'Дата регистрации',
         'Remember me'=>'Запомнить меня',
-        'Username'=>'Имя пользователя',
+        'Username'=>'Логин',
         'Password'=>'Пароль',
         'Verify code'=>'Ключ проверки',
         'Incorrect login or password'=>'Неверный логин или пароль',
