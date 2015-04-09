@@ -12,13 +12,14 @@
         $model->username=$username;
     }    
     
-    $form=FormElements::startForm('user-login', true);
+    $formRender=new FormElements($this, $model);
+    $formRender->startForm('user-login', true);
     
-    FormElements::showErrors($form, $model, Yii::t('AuthModule.forms', 'Login. Login failure'));
-    FormElements::textField($form, $model, 'username', Yii::t('AuthModule.forms', 'Login. Username placeholder'));
-    FormElements::passwordField($form, $model, 'password', Yii::t('AuthModule.forms', 'Login. Password placeholder'));
-    FormElements::checkBox($form, $model, 'rememberMe', Yii::t('AuthModule.forms', 'Login. Remember me checkbox'));
-    FormElements::capthaField($form, $model, 'verifyCode');
+    $formRender->showErrors(Yii::t('AuthModule.forms', 'Login. Login failure'));
+    $formRender->textField('username', Yii::t('AuthModule.forms', 'Login. Username placeholder'));
+    $formRender->passwordField('password', Yii::t('AuthModule.forms', 'Login. Password placeholder'));
+    $formRender->checkBox('rememberMe', Yii::t('AuthModule.forms', 'Login. Remember me checkbox'));
+    $formRender->capthaField('verifyCode');
     
     if ($model->scenario!='withCaptcha'){
         Yii::app()->clientScript->registerScript("captcha", "
@@ -29,14 +30,14 @@
     $buttonLabel=Yii::t('AuthModule.forms', 'Login. Submit button');
     
     if (!$isAjax){
-        FormElements::submitButton($buttonLabel);
+        $formRender->submitButton($buttonLabel);
     }
     else{
         $url=$this->createUrl('login');
-        FormElements::ajaxSubmitPanel($form, $buttonLabel, $url);
+        $formRender->ajaxSubmitPanel($buttonLabel, $url);
     }
     
-    FormElements::endForm($this);
+    $formRender->endForm();
 
     echo "<br>".CHtml::link(Yii::t('AuthModule.forms', 'Login. Restore password'),array('user/passrequest'));
 

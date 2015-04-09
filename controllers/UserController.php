@@ -14,11 +14,6 @@ class UserController extends Controller
 {
     const VALIDATOR_ACTIVATE=0;
     const VALIDATOR_RESTORE=1;  
-            
-    public function actionTest(){
-        //echo "test helper from controller<br><br>";
-        //tester\Help::test();
-    }
     
     public function actionIndex(){
         $userId=Yii::app()->user->getId();

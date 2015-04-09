@@ -26,148 +26,187 @@
 
 class FormElements_rename{
     
-    public function startForm($id='form', $ajaxValidation=false){
+    public $fieldClass="col-sm-10";
+    public $form=null;
 
+    private $context;
+    private $model;
+    
+    function __construct($context, $model){
+        $this->context=$context;
+        $this->model=$model;
+    }
+        
+    public function startForm($id='form', $ajaxValidation=false){
+        
+        
+        echo '<div id="modalFormError" class="modal-form-error"></div>';
+        
         echo '<div class="form">';
-        $form=$this->beginWidget('CActiveForm', array(
+        $this->form=$this->context->beginWidget('CActiveForm', array(
             'id'=>$id,
             'enableAjaxValidation'=>$ajaxValidation,
+            'enableClientValidation'=>true,
+            'clientOptions'=>array(
+                'validateOnSubmit'=>true, 
+                'validateOnChange'=>false,
+            ),
             'htmlOptions'=>array(
                 'class'=>'form-horizontal',
-              ),
-    
-            'clientOptions'=>array(
-                'validateOnSubmit'=>false,       
-            ),  
-
-            // Please note: When you enable ajax validation, make sure the corresponding
-            // controller action is handling ajax validation correctly.
-            // See class documentation of CActiveForm for details on this,
-            // you need to use the performAjaxValidation()-method described there.
-            //'enableAjaxValidation'=>false,
-            ));
+            ),
+        ));
         
-        return $form;
     }
 
-    public function endForm($context){
-        $context->endWidget();
+    public function endForm(){
+        $this->context->endWidget();
         echo '</div>';
     }
 
-    public function textField($form, $model, $fieldName, $fieldPlaceHolder='', $groupClass=''){
+    public function textField($fieldName, $fieldPlaceHolder='', $groupClass=''){
         echo '<div class="form-group ' . $groupClass . '">';
-            echo $form->label($model,$fieldName, array('class'=>'control-label col-sm-2'));
-            echo '<div class="col-sm-10">';
-            echo    $form->textField($model, $fieldName, array('class'=>'form-control', 'placeholder'=>$fieldPlaceHolder)); 
+            echo $this->form->label($this->model,$fieldName, array('class'=>'control-label col-sm-2'));
+            echo '<div class="' . $this->fieldClass . '">';
+            echo    $this->form->textField($this->model, $fieldName, array('class'=>'form-control', 'placeholder'=>$fieldPlaceHolder)); 
+            echo    $this->form->error($this->model, $fieldName);
             echo '</div>';
         echo '</div>';
     }
 
-    public function hiddenField($form, $model, $fieldName, $fieldPlaceHolder='', $groupClass=''){
-        echo $form->hiddenField($model, $fieldName); 
+    public function hiddenField($fieldName, $fieldPlaceHolder='', $groupClass=''){
+        echo $this->form->hiddenField($this->model, $fieldName); 
 
     }
 
-    public function textFieldDisabled($form, $model, $fieldName, $fieldPlaceHolder=''){
+    public function textFieldDisabled($fieldName, $fieldPlaceHolder=''){
         echo '<div class="form-group">';
-            echo $form->label($model,$fieldName, array('class'=>'control-label col-sm-2'));
-            echo '<div class="col-sm-10">';
-            echo    $form->textField($model, $fieldName, array('class'=>'form-control', 'placeholder'=>$fieldPlaceHolder,'disabled'=>'true')); 
+            echo $this->form->label($this->model,$fieldName, array('class'=>'control-label col-sm-2'));
+            echo '<div class="' . $this->fieldClass . '">';
+            echo    $this->form->textField($this->model, $fieldName, array('class'=>'form-control', 'placeholder'=>$fieldPlaceHolder,'disabled'=>'true')); 
             echo '</div>';
         echo '</div>';
     }    
         
-    public function passwordField($form, $model, $fieldName, $fieldPlaceHolder=''){
+    public function passwordField($fieldName, $fieldPlaceHolder=''){
         echo '<div class="form-group">';
-            echo $form->label($model,$fieldName, array('class'=>'control-label col-sm-2'));
-            echo '<div class="col-sm-10">';
-            echo    $form->passwordField($model, $fieldName, array('class'=>'form-control', 'placeholder'=>$fieldPlaceHolder)); 
+            echo $this->form->label($this->model,$fieldName, array('class'=>'control-label col-sm-2'));
+            echo '<div class="' . $this->fieldClass . '">';
+            echo    $this->form->passwordField($this->model, $fieldName, array('class'=>'form-control', 'placeholder'=>$fieldPlaceHolder)); 
+            echo    $this->form->error($this->model, $fieldName);
             echo '</div>';
         echo '</div>';
     }    
     
     public function submitButton($text){
         echo '<div class="form-group">';
-            echo '<div class="col-sm-offset-2 col-sm-10">';
+            echo '<div class="col-sm-offset-2 '. $this->fieldClass . '">';
             echo CHtml::submitButton($text, array('class' => 'btn btn-primary',)); 
             echo '</div>';
 	echo '</div>';
     }
     
-    public function capthaField($model, $fieldName){
+    public function capthaField($fieldName){
          
         if(CCaptcha::checkRequirements() && Yii::app()->user->isGuest){
-             echo '<div class="form-group">';
-             echo CHtml::activeLabelEx($model, $fieldName, array('class'=>'control-label col-sm-2'));
-             $this->widget('CCaptcha', array(
+             echo '<div class="form-group" id="captcha">';
+             echo CHtml::activeLabel($this->model, $fieldName, array('class'=>'control-label col-sm-2'));
+             $this->form->widget('CCaptcha', array(
                         'clickableImage'=>true, 
                         'showRefreshButton'=>true, 
-                        //'buttonLabel' => CHtml::image(Yii::app()->baseUrl.'/css/images/captcha_refresh.png'),
                         'buttonLabel' => '<span class="glyphicon glyphicon-refresh"></span>',
                         )
              );
-             echo CHtml::activeTextField($model, $fieldName, array('class'=>'captha-field', 'placeholder'=>Yii::t('AuthModule.forms','Enter captcha placeholder')));
+             echo CHtml::activeTextField($this->model, $fieldName, array('class'=>'captha-field', 'placeholder'=>Yii::t('AuthModule.forms','Enter captcha placeholder')));
+             echo $this->form->error($this->model, $fieldName, array('class'=>'captchaErrorMessage'));
              echo '</div>';
         }
     }
 
-    public function checkBox($form, $model, $field){
+    public function checkBox($field){
         echo '<div class="form-group">';
-            echo '<div class="col-sm-offset-2 col-sm-10">';
-                echo $form->checkBox($model,$field);
-                echo ' '.$form->label($model,$field);
+            echo '<div class="col-sm-offset-2 '. $this->fieldClass . '">';
+                echo $this->form->checkBox($this->model,$field);
+                echo ' '.$this->form->label($this->model,$field);
             echo '</div>';        
         echo '</div>';        
     }
     
-    public function showErrors($form, $model, $textHeader=''){
-        $errArray=$model->getErrors();
+    public function showErrors($textHeader=''){
+        $errArray=$this->model->getErrors();
         if (count($errArray)==0){
             return;
         }
         
         echo '<div class="alert alert-warning">';
         if (empty($textHeader)){
-            echo $form->errorSummary($model);
+            echo $this->form->errorSummary($this->model);
         }else{
-            echo $form->errorSummary($model, $textHeader);
+            echo $this->form->errorSummary($this->model, $textHeader);
         }
         echo '</div>';
     }
     
-    public function ajaxSubmitPanel($form, $buttonLabel, $url, $messageFormId='ajaxFormMessage'){
+    public function ajaxSubmitPanel($buttonLabel, $url, $messageFormId='ajaxFormMessage'){
         echo '<div class="form-group">
             <label class="control-label col-sm-2 ajax-form-label"></label>
             <div class="col-sm-10">';
         
         echo "<input class='btn btn-primary' name='btSubmit' type='submit' value='".$buttonLabel."' id='btSubmit' />
             <script type='text/javascript'>
+            jQuery('body').off('click','#btSubmit'); //clear listeners
             jQuery('body').on('click','#btSubmit',
-                        function(){jQuery.ajax({'type':'POST','success':function(data){
-                                var response=$.parseJSON(data);
-                                $('#ajaxFormMessage').text(response.message);
-                                if (response.status==='success'){
-                                    if (response.event==='LoggedIn'){
-                                        window.location.reload();
-                                        return;
+                        function(e){
+                            var ajaxData=$('#".$this->form->id."').serialize();
+                                ajaxData=ajaxData + '&ajax=".$this->form->id."'; //for ajax validators
+                            jQuery.ajax({'type':'POST',
+                                'success':function(data){
+                                    var response=$.parseJSON(data);
+                                    //alert(data);
+                                    $('#ajaxFormMessage').text(response.message);
+                                    if (response.status==='success'){
+                                        if (response.event==='LoggedIn'){
+                                            window.location.reload();
+                                            return;
+                                        }
+                                        var event = new CustomEvent(
+                                            response.event, 
+                                            {detail: {
+                                                id: response.id, 
+                                                name: response.name,
+                                                message: response.message,
+                                                }
+                                            });
+                                        document.dispatchEvent(event);
                                     }
-                                    var event = new CustomEvent(
-                                        response.event, 
-                                        {detail: {
-                                            id: response.id, 
-                                            name: response.name,
-                                            message: response.message,
-                                            }
-                                        });
-                                        
-                                    document.dispatchEvent(event);
-                                }else{
-                                    alert('Error: '+response.id);
-                                }
-                            },'url':'".$url."',
-                            'cache':false,
-                            'data':jQuery('#".$form->id."').serialize()
+                                    else if (response.status==='error'){
+                                        message=response.message;
+                                        $('#modalFormError').html(message);
+                                        $('#modalFormError').show();
+                                    }
+                                    else{
+                                        //standard ajax validation response
+                                        erId='_em_';
+                                        if (data.indexOf('{')==0) {
+                                            $('div.errorMessage').hide(); //hide old errors
+                                            //show errors
+                                            jQuery.each(response, function(key, value) { 
+                                                    message=value.toString();
+                                                    message=message.replace('\.,', '.<br>');
+                                                    //message=value[0];
+                                                    jQuery('#'+key+erId).show().html(message); 
+                                                }
+                                            );
+                                        }
+                                    }
+                                    //show captha if needed
+                                    if (response.hasOwnProperty('captcha')){
+                                        $('#captcha').show();
+                                    }
+
+                                },
+                                'url':'".$url."',
+                                'cache':false,
+                                'data':ajaxData,
                             });
                             return false;
                         });

@@ -17,24 +17,25 @@
     ?>
 
     <?php 
-        $form=FormElements::startForm();
-        FormElements::showErrors($form, $model);
+        $formRender=new FormElements($this, $model);
+        $formRender->startForm();
+        $formRender->showErrors($model);
         if (!$isNewRecord){
-            FormElements::textFieldDisabled($form, $model, 'username');
+            $formRender->textFieldDisabled('username');
         }
         else{
-            FormElements::textField($form, $model, 'username', Yii::t('AuthModule.forms', 'Registration form. Username placeholder'));
+            $formRender->textField('username', Yii::t('AuthModule.forms', 'Registration form. Username placeholder'));
         }
-        FormElements::textField($form, $model, 'email', Yii::t('AuthModule.forms', 'User form. Email placeholder'));
-        FormElements::textField($form, $model, 'full_name', Yii::t('AuthModule.forms', 'User form. Fullname placeholder'));
-        FormElements::passwordField($form, $model, 'password_entered', Yii::t('AuthModule.forms', 'User form. Password placeholder'));
-        FormElements::capthaField($form, $model, 'verifyCode');
+        $formRender->textField('email', Yii::t('AuthModule.forms', 'User form. Email placeholder'));
+        $formRender->textField('full_name', Yii::t('AuthModule.forms', 'User form. Fullname placeholder'));
+        $formRender->passwordField('password_entered', Yii::t('AuthModule.forms', 'User form. Password placeholder'));
+        $formRender->capthaField('verifyCode');
         if ($isNewRecord){
-            FormElements::submitButton(Yii::t('AuthModule.forms', 'Registration form. Submit button'));
+            $formRender->submitButton(Yii::t('AuthModule.forms', 'Registration form. Submit button'));
         }
         else{
-            FormElements::submitButton(Yii::t('AuthModule.forms', 'Update form. Submit button'));
+            $formRender->submitButton(Yii::t('AuthModule.forms', 'Update form. Submit button'));
         }
-        FormElements::endForm($this);
+        $formRender->endForm();
     ?>
 

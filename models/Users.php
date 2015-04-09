@@ -144,7 +144,8 @@ class Users extends CActiveRecord{
                 $this->password_hash = $hash;
                 $dt = new DateTime();
                 $this->date_reg=$dt->format(Common::getParam('dateFormat'));                   
-                $ip=Yii::app()->request->getUserHostAddress();
+                //$ip=Yii::app()->request->getUserHostAddress();
+                $ip=Common::getUserIp();
                 $this->ip_endorsed=$ip;
             }
             
@@ -178,15 +179,6 @@ class Users extends CActiveRecord{
         $criteria->compare('LOWER(email)',strtolower($email), false); 
         $model=$this->find($criteria);
         
-        /*
-        $query="SELECT email FROM user_info WHERE email='".$email."'";
-        $result=mysql_query($query) or die("email cannot be added".mysql_error());
-        if(mysql_num_rows($result) > 0)
-        {
-            die(" Sorry that user " .$email. " already exists ! <br>");
-        }
-        */
-        
         return $model;
         
     }
@@ -198,50 +190,8 @@ class Users extends CActiveRecord{
         $criteria->limit=1;
         $criteria->compare('LOWER(username)',strtolower($username), false); 
         $model=$this->find($criteria);
-        
-        //$model=$this->findByAttributes(array('username'=>$username));
+
         return $model;
     }
-/*
-    public function uniqueEmail($attribute, $params){
-        if (empty($this->email)){
-            return;
-        }
-        $modelFound=$this->getByEmail($this->email);
-        if ($modelFound!=null && ($modelFound->id!=$this->id)){
-            $this->addError($attribute, $params['message']);
-        }
-    }
-
-    public function uniqueUsername($attribute, $params){
-        if (empty($this->usrname)){
-            return;
-        }
-        $modelFound=$this->getByUserName($this->username);
-        if ($modelFound!=null && ($modelFound->id!=$this->id)){
-            $this->addError($attribute, $params['message']);
-        }
-    }
-*/
-  /*  public function passwordStrength($attribute){
-        $passStrength=Yii::app()->params['passStrength'];
-        if ($passStrength==null){
-            $passStrength=0;
-        }
-        
-        if ($passStrength==0){
-            $pattern = '/^(?=.*[a-zA-Z0-9]).{4,}$/';  
-            $message=Yii::t('AuthModule.forms', 'Password is not strong enough (weak)');
-        }
-        elseif ($passStrength==1){
-            $pattern = '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/';  
-            $message=Yii::t('AuthModule.forms', 'Password is not strong enough (strong)');
-        }
-        
-        if(!preg_match($pattern, $this->$attribute)){
-          $this->addError($attribute, $message);
-        }
-    }
-*/
     
 }
