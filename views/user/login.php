@@ -39,7 +39,25 @@
     
     $formRender->endForm();
 
-        
+    ?>
+
+<a href="#" onclick="js:myWindow('http://localhost/trader-news.ru/index.php?r=auth/user/login&service=facebook');" title="Показать">Facebook</a>
+<br><br>
+<script>
+function myWindow(url){
+    var params = "width=500, height=500, menubar=no,location=yes,resizable=yes,scrollbars=yes,status=yes"
+    window.open(url, "Authorize", params)
+}    
+</script>
+    
+<a href="#" onclick="js:myWindow('http://localhost/trader-news.ru/index.php?r=auth/user/login&service=vkontakte');" title="Показать">VK</a>
+<br><br>
+
+    
+
+<?php
+    
+    
     echo '<span class="col-sm-2"></span>';
     echo CHtml::link(Yii::t('AuthModule.forms', 'Login. Restore password'),array('user/passrequest'));
     echo '<span class="margin-right-mid"></span>';
@@ -47,7 +65,5 @@
     
     echo '<br><br><hr><span class="col-sm-2">Вы можете войти с помощью ваших учетных записей:</span>';
     echo '<span class="col-sm-10">';
-    
-    $this->widget('ext.eauth.EAuthWidget', array('action' => 'user/login'));
-    
+
     echo '</span>';

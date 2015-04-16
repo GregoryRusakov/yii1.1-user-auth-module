@@ -23,44 +23,36 @@ class UserController extends Controller
 
     public function actionLogin(){
                 
-        $serviceName = Yii::app()->request->getQuery('service');
-        if (isset($serviceName)) {
-            /** @var $eauth EAuthServiceBase */
-            $eauth = Yii::app()->eauth->getIdentity($serviceName);
-            $eauth->redirectUrl = Yii::app()->user->returnUrl;
-            $eauth->cancelUrl = $this->createAbsoluteUrl('site/login');
-
-            try {
-                if ($eauth->authenticate()) {
-                    //var_dump($eauth->getIsAuthenticated(), $eauth->getAttributes());
-                    $identity = new EAuthUserIdentity($eauth);
-
-                    // successful authentication
-                    if ($identity->authenticate()) {
-                        Yii::app()->user->login($identity);
-                        //var_dump($identity->id, $identity->name, Yii::app()->user->id);exit;
-
-                        // special redirect with closing popup window
-                        $eauth->redirect();
-                    }
-                    else {
-                        // close popup window and redirect to cancelUrl
-                        $eauth->cancel();
-                    }
-                }
-
-                // Something went wrong, redirect to login page
-                $this->redirect(array('site/login'));
+   $service = Yii::app()->request->getQuery('service');
+    if (isset($service)) {
+        $authIdentity = Yii::app()->eauth->getIdentity($service);
+        $authIdentity->redirectUrl = Yii::app()->user->returnUrl;
+        $authIdentity->cancelUrl = $this->createAbsoluteUrl('site/login');
+        
+        if ($authIdentity->authenticate()) {
+            $identity = new ServiceUserIdentity($authIdentity);
+            
+            // Успешный вход
+            if ($identity->authenticate()) {
+                Yii::app()->user->login($identity);
+                
+                // Специальный редирект с закрытием popup окна
+                Yii::log('Auth with service: ' . $service, CLogger::LEVEL_INFO, 'service auth');
+                Yii::log(CVarDumper::dumpAsString($authIdentity), CLogger::LEVEL_INFO, 'service auth');
+                $authIdentity->redirect();
             }
-            catch (EAuthException $e) {
-                // save authentication error to session
-                Yii::app()->user->setFlash('error', 'EAuthException: '.$e->getMessage());
+            else {
+                // Закрываем popup окно и перенаправляем на cancelUrl
+                Yii::log('Error auth thru service: ' . $service, CLogger::LEVEL_ERROR, 'service auth');
+                Yii::log(CVarDumper::dumpAsString($authIdentity), CLogger::LEVEL_ERROR, 'service auth');
 
-                // close popup window and redirect to cancelUrl
-                $eauth->redirect($eauth->getCancelUrl());
+                $authIdentity->cancel();
             }
         }
-          
+        
+        // Что-то пошло не так, перенаправляем на страницу входа
+        $this->redirect(array('site/login'));
+    }
         
         
         
