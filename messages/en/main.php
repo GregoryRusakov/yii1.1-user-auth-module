@@ -45,5 +45,10 @@
         'Email address was not found'=>'Email address %s was not found',
         'Password restore link has been sent'=>'Password restore link has been sent to %s',
         'Requested user does not exist'=>'Requested user with ID %s does not exist',     
+        
+        'Home page'=>'Go to main page',
+        'Logout error'=>'Logout error',
+        'Logout error'=>'Incorrect site logout',
+        
     );
 ?>

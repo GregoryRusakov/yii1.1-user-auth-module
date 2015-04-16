@@ -19,7 +19,7 @@
     <?php 
         $formRender=new FormElements($this, $model);
         $formRender->startForm();
-        $formRender->showErrors($model);
+        $formRender->showErrors();
         if (!$isNewRecord){
             $formRender->textFieldDisabled('username');
         }

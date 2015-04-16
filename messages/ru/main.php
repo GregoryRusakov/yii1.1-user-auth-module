@@ -45,7 +45,10 @@
         'Email address was not found'=>'Адрес эл. почты %s не найден',
         'Password restore link has been sent'=>'Ссылка для восстановления пароля отправлена на почту %s',
         'Requested user does not exist'=>'Пользователь с ID %s не найден',
-        
-        
+                
+        'Home page'=>'Перейти на главную страницу',
+         
+        'Logout error'=>'Ошибка выхода',
+        'Logout error'=>'Ошибка выхода пользователя с сайта. Возможно выход уже был выполнен',
     );
 ?>

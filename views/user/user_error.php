@@ -19,7 +19,7 @@
     <div class="col-sm-4">
         <div class="panel panel-danger">
             <div class="panel-heading">
-                <?php echo '<h3 class="panel-title">'.$title.'</h3>'; ?>
+                
             </div>
             <div class="panel-body">
                 <?php
@@ -29,3 +29,7 @@
         </div>
     </div>
 </div>
+
+<?php
+echo CHtml::link(Yii::t('AuthModule.main', 'Home page'), Yii::app()->getHomeUrl());
+?>

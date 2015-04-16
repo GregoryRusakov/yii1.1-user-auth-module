@@ -101,7 +101,7 @@ class Common {
     }
     
     function showError($message, $title=''){
-        $this->render('auth/user/user_error', array('title'=>$title,'message'=>$message));
+        $this->render('/user/user_error', array('title'=>$title,'message'=>$message));
     }
     
     function getTemplateValue($templateName, $valueName){

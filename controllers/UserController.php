@@ -23,6 +23,58 @@ class UserController extends Controller
 
     public function actionLogin(){
                 
+        $serviceName = Yii::app()->request->getQuery('service');
+        if (isset($serviceName)) {
+            /** @var $eauth EAuthServiceBase */
+            $eauth = Yii::app()->eauth->getIdentity($serviceName);
+            $eauth->redirectUrl = Yii::app()->user->returnUrl;
+            $eauth->cancelUrl = $this->createAbsoluteUrl('site/login');
+
+            try {
+                if ($eauth->authenticate()) {
+                    //var_dump($eauth->getIsAuthenticated(), $eauth->getAttributes());
+                    $identity = new EAuthUserIdentity($eauth);
+
+                    // successful authentication
+                    if ($identity->authenticate()) {
+                        Yii::app()->user->login($identity);
+                        //var_dump($identity->id, $identity->name, Yii::app()->user->id);exit;
+
+                        // special redirect with closing popup window
+                        $eauth->redirect();
+                    }
+                    else {
+                        // close popup window and redirect to cancelUrl
+                        $eauth->cancel();
+                    }
+                }
+
+                // Something went wrong, redirect to login page
+                $this->redirect(array('site/login'));
+            }
+            catch (EAuthException $e) {
+                // save authentication error to session
+                Yii::app()->user->setFlash('error', 'EAuthException: '.$e->getMessage());
+
+                // close popup window and redirect to cancelUrl
+                $eauth->redirect($eauth->getCancelUrl());
+            }
+        }
+          
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         $isAjax=Yii::app()->request->isAjaxRequest;
           
         $formLogin=new LoginForm;
@@ -115,8 +167,8 @@ class UserController extends Controller
         $formLogin->username=$username;
         
         if ($isAjax){
-            //$this->renderPartial('login',array('model'=>$formLogin));
-            $this->renderPartial('login',array('model'=>$formLogin), false, true);
+            $this->renderPartial('login',array('model'=>$formLogin), false, false);
+            //$this->renderPartial('login',array('model'=>$formLogin), false, true);
         }
         else{
             $this->render('login',array('model'=>$formLogin));
@@ -129,6 +181,16 @@ class UserController extends Controller
         // Generate a login token and save it in the DB
         
         $userId=Yii::app()->user->getId();
+        if ($userId==null){
+            
+            $title=Yii::t('AuthModule.main','Logout error');
+            $title=Yii::t('AuthModule.main','Incorrect site logout');
+
+            Common::showError($message, $title);
+            return;
+
+        }
+        
         $modelUser=Users::model()->findByPk($userId);
         $modelUser->setScenario('lastlogin');
         $modelUser->logintoken = null;
