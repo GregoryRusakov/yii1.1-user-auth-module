@@ -22,51 +22,8 @@ class UserController extends Controller
     }     
 
     public function actionLogin(){
-                
-   $service = Yii::app()->request->getQuery('service');
-    if (isset($service)) {
-        $authIdentity = Yii::app()->eauth->getIdentity($service);
-        $authIdentity->redirectUrl = Yii::app()->user->returnUrl;
-        $authIdentity->cancelUrl = $this->createAbsoluteUrl('site/login');
-        
-        if ($authIdentity->authenticate()) {
-            $identity = new ServiceUserIdentity($authIdentity);
-            
-            // Успешный вход
-            if ($identity->authenticate()) {
-                Yii::app()->user->login($identity);
-                
-                // Специальный редирект с закрытием popup окна
-                Yii::log('Auth with service: ' . $service, CLogger::LEVEL_INFO, 'service auth');
-                Yii::log(CVarDumper::dumpAsString($authIdentity), CLogger::LEVEL_INFO, 'service auth');
-                $authIdentity->redirect();
-            }
-            else {
-                // Закрываем popup окно и перенаправляем на cancelUrl
-                Yii::log('Error auth thru service: ' . $service, CLogger::LEVEL_ERROR, 'service auth');
-                Yii::log(CVarDumper::dumpAsString($authIdentity), CLogger::LEVEL_ERROR, 'service auth');
+    
 
-                $authIdentity->cancel();
-            }
-        }
-        
-        // Что-то пошло не так, перенаправляем на страницу входа
-        $this->redirect(array('site/login'));
-    }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         $isAjax=Yii::app()->request->isAjaxRequest;
           
         $formLogin=new LoginForm;
@@ -542,7 +499,7 @@ class UserController extends Controller
 
                 $response=CActiveForm::validate($model);
                 $responseArray=CJSON::decode($response);
-                //Yii::app()->user->('error',''); //clear flash messages
+
                 if (Yii::app()->user->hasFlash('error')){
                     $flashError='';
                     foreach(Yii::app()->user->getFlashes() as $key => $message) {
