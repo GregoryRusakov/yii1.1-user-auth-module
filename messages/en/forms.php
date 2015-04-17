@@ -74,5 +74,8 @@
         'Username already taken'=>'Username already taken',
         'Password is not strong enough (weak)'=>'Password is not strong enough (min 4 letters or digits)',
         'Password is not strong enough (strong)'=>'Password is not strong enough (min 8 letters and digits and some symbols)',
+        
+        'Social login'=>'Social login enter',
+        
     );
 ?>

@@ -147,4 +147,49 @@ class Common {
     public function isAdminUser($id){
         return true;
     }
+    
+    public function renderSocialLogin($serviceName, $renderScript=false){
+        
+        if ($renderScript){
+            Yii::app()->clientScript->registerScript("serviceWindow", "
+                function login(url){
+                    var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
+                         screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
+                         outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
+                         outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
+                         width    = 720,
+                         height   = 480,
+                         left     = parseInt(screenX + ((outerWidth - width) / 2), 10),
+                         top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10),
+                         features = (
+                            'width=' + width +
+                            ',height=' + height +
+                            ',left=' + left +
+                            ',top=' + top
+
+                          );
+
+                    newwindow=window.open(url,'ServiceLogin',features);
+
+                   if (window.focus) {
+                       newwindow.focus();
+                   }
+                   return false;
+                }
+                ", CClientScript::POS_HEAD);
+        } //render window script
+        
+        $serviceNameLower=strtolower($serviceName);
+        $loginUrl=Yii::app()->createUrl('auth/hybrid/login', array('service'=>$serviceNameLower));
+        $imageUrl='images/icons/' . $serviceNameLower . '.png';
+        
+        $onClickJS='login("' . $loginUrl . '"); return false;';
+        
+        $imgHtml=Chtml::image($imageUrl, $serviceName, array('class'=>'socialIcon'));
+        
+        //show icon with link
+        echo CHtml::link($imgHtml, $loginUrl, array('onclick'=>$onClickJS));
+        
+        
+    }
 }
