@@ -76,6 +76,6 @@
         'Password is not strong enough (strong)'=>'Password is not strong enough (min 8 letters and digits and some symbols)',
         
         'Social login'=>'Social login enter',
-        
+        'Unable to login through social networks without JavaScript'=>'Unable to login through social networks without JavaScript',        
     );
 ?>

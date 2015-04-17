@@ -54,6 +54,8 @@
 ?>
 
 <hr>
+
+<div class="nojs-hide">
 <?php 
 
     if ($isAjax){
@@ -78,5 +80,10 @@
     Common::renderSocialLogin('twitter');
     
 ?>
+</div>
+<div class="nojs-show">
+    <p><?php echo Yii::t('AuthModule.forms', 'Unable to login through social networks without JavaScript');?></p>
+</div>
+    
 </p>
 

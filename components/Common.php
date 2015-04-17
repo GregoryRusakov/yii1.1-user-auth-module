@@ -153,6 +153,7 @@ class Common {
         if ($renderScript){
             Yii::app()->clientScript->registerScript("serviceWindow", "
                 function login(url){
+
                     var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
                          screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
                          outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,

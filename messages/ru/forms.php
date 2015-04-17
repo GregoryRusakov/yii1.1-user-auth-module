@@ -75,6 +75,7 @@
         'Password is not strong enough (strong)'=>'Пароль не достаточно сложный (должен содержать обычную и заглавную лат. буквы, цифру и спец. символ и быть не менее 8 символов в длину)',
 
         'Social login'=>'Вход с помощью социальных сетей',        
+        'Unable to login through social networks without JavaScript'=>'Вход через социальные сети не доступен без JavaScript',
         
     );
 ?>

@@ -41,8 +41,9 @@ class HybridController extends Controller
             $errorMessage=$ex->getMessage();
             Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
             Yii::app()->user->setFlash('warning', 'Вход через сервис ' . $service . ' не был выполнен.');
-            $errorLoginUrl=Yii::app()->createUrl('auth');
-            echo '<script>
+            $errorLoginUrl=Yii::app()->createUrl('');
+            echo '
+                <script>
                 if (window.opener){
                     window.opener.location.href="' . $errorLoginUrl . '"
                     window.close();
@@ -62,8 +63,6 @@ class HybridController extends Controller
             }
             </script>';
         
-        //$this->redirect('admin');
-        exit();
         
         var_dump($user_profile);
         
@@ -73,6 +72,7 @@ class HybridController extends Controller
         
         //login user
         
+        exit();
     }
  
 }
