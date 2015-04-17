@@ -68,14 +68,14 @@
     Common::renderSocialLogin('facebook', true);
 
     echo '<span class="margin-right-mid"></span>';
-    Common::renderSocialLogin('vkontakte');
+    Common::renderSocialLogin('google');
 
+    echo '<span class="margin-right-mid"></span>';
+    Common::renderSocialLogin('vkontakte');
+    
     /*
     echo '<span class="margin-right-mid"></span>';
     Common::renderSocialLogin('yandex');
-
-    echo '<span class="margin-right-mid"></span>';
-    Common::renderSocialLogin('google');
 
     echo '<span class="margin-right-mid"></span>';
     Common::renderSocialLogin('twitter');
