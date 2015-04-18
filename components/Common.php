@@ -152,19 +152,21 @@ class Common {
         
         if ($renderScript){
             Yii::app()->clientScript->registerScript("serviceWindow", "
-                function login(url){
-
+                function login(url, serviceName=''){
                     var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
                          screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
                          outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
                          outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
-                         //width    = 720,
-                         //height   = 480,
                          width    = outerWidth/2,
                          height   = outerHeight/2,
                          left     = parseInt(screenX + ((outerWidth - width) / 2), 10),
-                         top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10),
-                         features = (
+                         top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10);
+                       
+                    if (serviceName=='google'){
+                        width=520;
+                        height=720;
+                    }
+                    var  features = (
                             'width=' + width +
                             ',height=' + height +
                             ',left=' + left +
@@ -186,7 +188,7 @@ class Common {
         $loginUrl=Yii::app()->createUrl('auth/hybrid/login', array('service'=>$serviceNameLower));
         $imageUrl='images/icons/' . $serviceNameLower . '.png';
         
-        $onClickJS='login("' . $loginUrl . '"); return false;';
+        $onClickJS='login("' . $loginUrl . '", "' . $serviceName . '"); return false;';
         
         $imgHtml=Chtml::image($imageUrl, $serviceName, array('class'=>'socialIcon'));
         

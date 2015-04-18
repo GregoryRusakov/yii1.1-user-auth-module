@@ -18,6 +18,7 @@ class HybridController extends Controller
     }     
 
     public function actionTest(){
+        var_dump($_POST);
         echo "Hybrid test";
     }     
 
@@ -33,7 +34,9 @@ class HybridController extends Controller
         
         try{
             $hybridauth = new Hybrid_Auth($config);
+
             $adapter = $hybridauth->authenticate($service);
+            var_dump($adapter);
             $user_profile = $adapter->getUserProfile();
         }catch(Exception $ex){
             //var_dump($ex);
@@ -50,12 +53,13 @@ class HybridController extends Controller
                 }else {
                 }
                 </script>';
+
             exit();
             
         }
 
         $successLoginUrl=Yii::app()->createUrl('userprofiles');
-        echo '<script>
+        /*echo '<script>
             if (window.opener){
                 window.opener.location.href="' . $successLoginUrl . '"
                 window.close();
@@ -63,7 +67,7 @@ class HybridController extends Controller
             }
             </script>';
         
-        
+        */
         var_dump($user_profile);
         
         //check if user exist in database
