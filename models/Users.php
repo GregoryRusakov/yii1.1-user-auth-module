@@ -43,19 +43,19 @@ class Users extends CActiveRecord{
                     array('email, username, full_name', 'safe', 'on'=>'search'),
 
                     array('password_entered', 'safe'),
-                    array('email', 'email', 'except'=>'lastlogin'),
+                    array('email', 'email', 'except'=>'lastLogin'),
                     array('username, email', 'required', 'on'=>'insert, update'),
 
-                    array('password_entered', 'passValidator', 'except'=>'passRestore, activation, update, lastlogin'),
-                    //array('email', 'uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
+                    array('password_entered', 'passValidator', 'except'=>'passRestore, activation, update, lastLogin, serviceLogin'),
+                    //array('email', 'uniqueEmail','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastLogin'),
                     //array('username', 'uniqueUsername','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),    
-                    array('email', 'unique','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastlogin'),
+                    array('email', 'unique','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastLogin'),
                     array('username', 'unique','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
 
                     array('username', 'safe', 'except'=>'update'),
                     array('username', 'unsafe', 'on'=>'update'),
                                   
-                    array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastlogin'),
+                    array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastLogin, serviceLogin'),
             );
     }
 

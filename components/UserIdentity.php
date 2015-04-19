@@ -111,7 +111,7 @@ class UserIdentity extends CUserIdentity
             // Generate a login token and save it in the DB
             $dt = new DateTime();
             $modelUser->date_lastlogin=$dt->format($dateFormat);
-            $modelUser->setScenario('lastlogin');
+            $modelUser->setScenario('lastLogin');
             $modelUser->logintoken = sha1(uniqid(mt_rand(), true));
             if ($modelUser->save()){
                 //the login token is saved as a state

@@ -95,7 +95,7 @@ class UserController extends Controller
                     $this->redirect($loggedUserPage);
                 }
                 else{
-                    //hot logged in
+                    //not logged in
                     if (!Yii::app()->user->hasFlash('error')){
                         Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Incorrect login or password'));
                     }
@@ -141,7 +141,7 @@ class UserController extends Controller
         }
         
         $modelUser=Users::model()->findByPk($userId);
-        $modelUser->setScenario('lastlogin');
+        $modelUser->setScenario('lastLogin');
         $modelUser->logintoken = null;
         $modelUser->save();
         
