@@ -13,7 +13,7 @@
 class UserIdentity extends CUserIdentity
 {
         private $_id;
-        private $_username;
+        //private $_username;
         
         const LOGIN_TOKEN="logintoken";
         
@@ -103,7 +103,7 @@ class UserIdentity extends CUserIdentity
             $this->errorCode=self::ERROR_NONE;
             
             $this->_id=$modelUser->id;
-            $this->_username=$modelUser->username;
+            //$this->_username=$modelUser->username;
             
             $this->saveSuccessfulUserAttemt($modelUser);
             $this->saveSuccessfulIpAttemt($ip);
@@ -122,6 +122,7 @@ class UserIdentity extends CUserIdentity
             }
             
              $this->setState('username', $modelUser->username);
+             $this->setState('fullname', $modelUser->full_name);
              
             return true;
 	}

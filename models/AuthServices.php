@@ -3,15 +3,6 @@
 /**
  * This is the model class for table "auth_services".
  *
- * The followings are the available columns in table 'auth_services':
- * @property integer $id
- * @property integer $user_id
- * @property string $provider_name
- * @property string $date_connect
- * @property integer $connected
- * @property string $service_user_email
- * @property string $service_user_id
- * @property integer $connected_manual
  */
 class AuthServices extends CActiveRecord
 {
@@ -36,7 +27,7 @@ class AuthServices extends CActiveRecord
 			array('provider_name', 'length', 'max'=>20),
 			array('service_user_email', 'length', 'max'=>255),
 			array('service_user_id', 'length', 'max'=>100),
-			array('user_id, provider_name, date_connect, connected, service_user_email, service_user_id, connected_manual', 'safe', 'on'=>'search'),
+			array('user_id, provider_name, date_connected, connected, service_user_email, service_user_id, connected_manual', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,7 +51,7 @@ class AuthServices extends CActiveRecord
 			'id' => 'ID',
 			'user_id' => 'User',
 			'provider_name' => 'Provider Name',
-			'date_connect' => 'Date Connect',
+			'date_connected' => 'Date connected',
 			'connected' => 'Connected',
 			'service_user_email' => 'Service User Email',
 			'service_user_id' => 'Service User',
@@ -89,7 +80,7 @@ class AuthServices extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('user_id',$this->user_id);
 		$criteria->compare('provider_name',$this->provider_name,true);
-		$criteria->compare('date_connect',$this->date_connect,true);
+		$criteria->compare('date_connected',$this->date_connected,true);
 		$criteria->compare('connected',$this->connected);
 		$criteria->compare('service_user_email',$this->service_user_email,true);
 		$criteria->compare('service_user_id',$this->service_user_id,true);

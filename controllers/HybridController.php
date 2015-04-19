@@ -36,7 +36,7 @@ class HybridController extends Controller
             $hybridauth = new Hybrid_Auth($config);
 
             $adapter = $hybridauth->authenticate($service);
-            var_dump($adapter);
+            //var_dump($adapter);
             $user_profile = $adapter->getUserProfile();
         }catch(Exception $ex){
             //var_dump($ex);
@@ -62,7 +62,11 @@ class HybridController extends Controller
         
         echo '<div>Loggin in...</div>';
         
-        $user=$this->getUserByServiceProfile($user_profile, $service);
+        try{
+            $user=$this->getUserByServiceProfile($user_profile, $service);
+        }catch (Exception $ex){
+            throw new CHttpException(404, 'Error logging thru service ' . $service);
+        }
         
         //login user
         $username=$user->username;
@@ -105,13 +109,10 @@ class HybridController extends Controller
         if ($serviceUser==null){
             //create service user
             $serviceUser=new AuthServices;
-            $dt = new DateTime();
             $serviceUser->date_connected=$currentDateString;
             $serviceUser->provider_name=$service;
             
         }
-        //update service user
-        //$serviceUser->
         
         //check user in database by email
         $siteUser=Users::model()->getByEmail($serviceUserEmail);

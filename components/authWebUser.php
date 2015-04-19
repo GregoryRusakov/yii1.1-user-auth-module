@@ -12,7 +12,11 @@
 
 class authWebUser extends CWebUser{
     
+    public $fullname='n/a';
+    
     protected function beforeLogin($id,$states,$fromCookie) {
+        
+        $model = Users::model()->findByPk($id);
         
         if ($fromCookie){
             
@@ -21,7 +25,7 @@ class authWebUser extends CWebUser{
                 return false;
             }
 
-            $model = Users::model()->findByPk($id);            
+            //$model = Users::model()->findByPk($id);            
             if ($model==null){
                 return false;
             }
@@ -30,7 +34,6 @@ class authWebUser extends CWebUser{
             $cookieLoginToken = $states[UserIdentity::LOGIN_TOKEN];
             
             if(!isset($cookieLoginToken)|| $cookieLoginToken != $model->logintoken) {
-                //throw new CHttpException(404, 'Автоматический вход по cookie не возможен.');
                 return false;
             }
 
@@ -44,7 +47,10 @@ class authWebUser extends CWebUser{
         if (!parent::beforeLogin($id,$states,$fromCookie)){
             return false;
         }
-        
+           
+        if ($model!=null){
+            $this->fullname=$model->full_name;
+        }
         return true;
         
     }   
