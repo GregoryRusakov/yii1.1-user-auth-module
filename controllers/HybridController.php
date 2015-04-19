@@ -60,27 +60,22 @@ class HybridController extends Controller
 
         //var_dump($user_profile);
         
-        echo '<div>Loggin in...</div>';
+        echo '<div>Logging in...</div>';
         
         try{
             $user=$this->getUserByServiceProfile($user_profile, $service);
         }catch (Exception $ex){
-            throw new CHttpException(404, 'Error logging thru service ' . $service);
+            Yii::log($ex->getMessage(), 'error', 'login thrught ' . $service);
+            throw new CHttpException(404, 'Error logging throught service ' . ucwords($service));
         }
         
         //login user
         $username=$user->username;
         $password=$user->password_hash;
         $identity=new UserIdentity($username,$password);
-        $identity->authenticate();
 
-        if($identity->errorCode===UserIdentity::ERROR_NONE){
-            $days=Common::getParam('cookieBasedLoginDays');
-            if (empty($days)){
-                $days=14;                            
-            }
-            Yii::app()->user->login($identity, 0);
-        }
+        Yii::app()->user->login($identity, 0);
+
         
        $successLoginUrl=Yii::app()->createUrl('userprofiles');
         /*echo '<script>
@@ -119,7 +114,7 @@ class HybridController extends Controller
         
         if ($siteUser==null){
             //create database user
-            $siteUser=new Users('serviceLogin');
+            $siteUser=new Users();
             $siteUser->date_reg=$currentDateString;
             $siteUser->activated=true; //do not need activation by email
             
@@ -128,30 +123,33 @@ class HybridController extends Controller
         }
         else{
             //update database user
-            $userContemporary=UsersComplementary::model()->getUserById($siteUser->id);
+            $userContemporary=UsersComplementary::model()->getByUserById($siteUser->id);
         }
         
         if ($userContemporary==null){
             $userContemporary=new UsersComplementary;
-            $userContemporary->user_id=$siteUser->id;   
         }
         
+        $siteUser->scenario='serviceLogin';
         $siteUser->full_name=$serviceProfile->firstName . ' ' . $serviceProfile->lastName;
         $siteUser->username=$serviceProfile->firstName . '' . $serviceProfile->lastName;
         $siteUser->date_lastlogin=$currentDateString;
-        $siteUser->comments='Updated from ' . $service;
-        
+        $siteUser->email=$serviceUserEmail;
+        $siteUser->comments='Updated from ' . ucwords($service);
+            
         if ($siteUser->saveModel()===false){
-            throw new CHtmlException(404, CHtml::errorSummary($siteUser));
+            throw new CHttpException(404, CHtml::errorSummary($siteUser));
         }
         
+        $userContemporary->scenario='serviceLogin';
+        $userContemporary->user_id=$siteUser->id;           
         $userContemporary->city=$serviceProfile->city;
         $userContemporary->country=$serviceProfile->country;
-        $userContemporary->picture_url=$serviceProfile->photoUrl;
-        $userContemporary->comments='Updated from ' . $service;  
+        $userContemporary->picture_url=$serviceProfile->photoURL;
+        $userContemporary->comments='Updated from ' . ucwords($service);
 
         if ($userContemporary->saveModel()===false){
-            throw new CHtmlException(404, CHtml::errorSummary($userContemporary));
+            throw new CHttpException(404, CHtml::errorSummary($userContemporary));
         }  
         
         //fill service user data
@@ -161,10 +159,24 @@ class HybridController extends Controller
         $serviceUser->service_user_id=$serviceUserId;
               
         if ($serviceUser->saveModel()===false){
-            throw new CHtmlException(404, CHtml::errorSummary($serviceUser));
+            throw new CHttpException(404, CHtml::errorSummary($serviceUser));
         }  
     
         return $siteUser;
     }
-    
+ 
+    public function actions()
+    {
+        return array(
+            // captcha action only for AdminUser compatible model
+            'captcha'=>array(
+                'class'=>'CCaptchaAction',
+                'maxLength'=> 4,
+                'minLength'=> 4,
+                'testLimit'=>3,
+                'backColor'=>0xFFFFFF,
+
+            ),
+        );
+    }       
 }

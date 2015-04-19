@@ -22,8 +22,8 @@ class AuthServices extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, user_id, provider_name, service_user_id', 'required'),
-			array('id, user_id, connected, connected_manual', 'numerical', 'integerOnly'=>true),
+			array('user_id, provider_name, service_user_id', 'required'),
+			array('user_id, connected_manual', 'numerical', 'integerOnly'=>true),
 			array('provider_name', 'length', 'max'=>20),
 			array('service_user_email', 'length', 'max'=>255),
 			array('service_user_id', 'length', 'max'=>100),
