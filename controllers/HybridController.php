@@ -57,10 +57,6 @@ class HybridController extends Controller
             exit();
             
         }
-
-        //var_dump($user_profile);
-        
-        echo '<div>Logging in...</div>';
         
         try{
             $user=$this->getUserByServiceProfile($user_profile, $service);
@@ -73,12 +69,19 @@ class HybridController extends Controller
         $username=$user->username;
         $password=$user->password_hash;
         $identity=new UserIdentity($username,$password);
-
-        Yii::app()->user->login($identity, 0);
-
         
-       $successLoginUrl=Yii::app()->createUrl('userprofiles');
-        /*echo '<script>
+        $identity->authenticate(true);
+        
+        if($identity->errorCode===UserIdentity::ERROR_NONE){
+            Yii::app()->user->login($identity, 0);
+        }
+	else{
+            echo 'Error loging in';
+            exit();
+        }        
+
+        $successLoginUrl=Yii::app()->createUrl('userprofiles');
+        echo '<script>
             if (window.opener){
                 window.opener.location.href="' . $successLoginUrl . '"
                 window.close();
@@ -86,9 +89,16 @@ class HybridController extends Controller
             }
             </script>';
         
+        /*$loggedUserPage=Yii::app()->user->getState('openPageAfterLogin');
+        if ($loggedUserPage==null){
+            $loggedUserPage=Yii::app()->user->returnUrl;
+        }
+        if ($loggedUserPage==null){
+            $loggedUserPage=Common::getParam('profilePage');   
+        }
+        Yii::app()->user->setState('openPageAfterLogin', null);
+        $this->redirect($loggedUserPage);   
         */
-        
-        exit();
     }
     
     private function getUserByServiceProfile($serviceProfile, $service){
@@ -117,7 +127,7 @@ class HybridController extends Controller
             $siteUser=new Users();
             $siteUser->date_reg=$currentDateString;
             $siteUser->activated=true; //do not need activation by email
-            
+            $siteUser->ip_endorsed=Common::getUserIp();
             $userContemporary=new UsersComplementary;
             
         }

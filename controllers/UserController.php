@@ -133,7 +133,7 @@ class UserController extends Controller
         if ($userId==null){
             
             $title=Yii::t('AuthModule.main','Logout error');
-            $title=Yii::t('AuthModule.main','Incorrect site logout');
+            $message=Yii::t('AuthModule.main','Incorrect site logout');
 
             Common::showError($message, $title);
             return;

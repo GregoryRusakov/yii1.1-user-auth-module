@@ -25,7 +25,7 @@ class UserIdentity extends CUserIdentity
 	 * against some persistent user identity storage (e.g. database).
 	 * @return boolean whether authentication succeeds.
 	 */
-	public function authenticate()
+	public function authenticate($isServiceLogin=false)
 	{
             
             $ip=Common::getUserIp();
@@ -77,25 +77,28 @@ class UserIdentity extends CUserIdentity
                 return false;
             }
             
-            $password_hash=$modelUser->password_hash;
-            $pass=$this->password;
+            if (!$isServiceLogin){
+                
+                $password_hash=$modelUser->password_hash;
+                $pass=$this->password;
+                    
+                if(!password_verify($pass, $password_hash)) {
+                    $this->errorCode=self::ERROR_PASSWORD_INVALID;
+                    $result=$this->saveUnsuccessfulIpAttempt($ip, $modelUser->username);
+                    if ($result!=null){
+                        Yii::app()->user->setFlash('error', sprintf(Yii::t('AuthModule.main','Too much login attempts from IP'), $ip, $result->format($dateFormat), $timeZoneLabel));
+                        return;
+                    }
 
-            if(!password_verify($pass, $password_hash)) {
-                $this->errorCode=self::ERROR_PASSWORD_INVALID;
-                $result=$this->saveUnsuccessfulIpAttempt($ip, $modelUser->username);
-                if ($result!=null){
-                    Yii::app()->user->setFlash('error', sprintf(Yii::t('AuthModule.main','Too much login attempts from IP'), $ip, $result->format($dateFormat), $timeZoneLabel));
-                    return;
+                    $result=$this->saveUnsuccessfulUserAttempt($modelUser);
+                    if ($result!=null){
+                        Yii::app()->user->setFlash('error', sprintf(Yii::t('AuthModule.main','Too much login attempts from user'), $modelUser->username, $result->format($dateFormat), $timeZoneLabel));
+                        return;
+                    }
+                    Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed'));
+
+                    return false;
                 }
-                
-                $result=$this->saveUnsuccessfulUserAttempt($modelUser);
-                if ($result!=null){
-                    Yii::app()->user->setFlash('error', sprintf(Yii::t('AuthModule.main','Too much login attempts from user'), $modelUser->username, $result->format($dateFormat), $timeZoneLabel));
-                    return;
-                }
-                Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed'));
-                
-                return false;
             }
             
             //login OK
@@ -103,7 +106,6 @@ class UserIdentity extends CUserIdentity
             $this->errorCode=self::ERROR_NONE;
             
             $this->_id=$modelUser->id;
-            //$this->_username=$modelUser->username;
             
             $this->saveSuccessfulUserAttemt($modelUser);
             $this->saveSuccessfulIpAttemt($ip);

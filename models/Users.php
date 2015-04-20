@@ -185,10 +185,14 @@ class Users extends CActiveRecord{
 
     public function getByUserName($username)
     {
+        
+        $usernameLow = mb_strtolower($username,'UTF-8');
+                
         $criteria=new CDbCriteria;
         $criteria->select = '*';
         $criteria->limit=1;
-        $criteria->compare('LOWER(username)',strtolower($username), false); 
+        //$criteria->compare('LOWER(username)',strtolower($username), false); 
+        $criteria->compare('LOWER(username)',$usernameLow, false); 
         $model=$this->find($criteria);
 
         return $model;
