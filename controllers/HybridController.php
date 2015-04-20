@@ -156,6 +156,7 @@ class HybridController extends Controller
         $userContemporary->city=$serviceProfile->city;
         $userContemporary->country=$serviceProfile->country;
         $userContemporary->picture_url=$serviceProfile->photoURL;
+        $userContemporary->language=$serviceProfile->language;
         $userContemporary->comments='Updated from ' . ucwords($service);
 
         if ($userContemporary->saveModel()===false){

@@ -157,10 +157,10 @@ class Common {
                          screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
                          outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
                          outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
-                         width    = outerWidth/2,
-                         height   = outerHeight/2,
-                         left     = parseInt(screenX + ((outerWidth - width) / 2), 10),
-                         top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10);
+                         width    = outerWidth/2+50,
+                         height   = outerHeight/2+50,
+                         left     = parseInt(screenX + ((outerWidth - width) / 2), 10)+25,
+                         top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10)+25;
                        
                     if (serviceName=='google'){
                         width=520;

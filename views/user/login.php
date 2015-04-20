@@ -74,13 +74,6 @@
     echo '<span class="margin-right-mid"></span>';
     Common::renderSocialLogin('vkontakte');
     
-    /*
-    echo '<span class="margin-right-mid"></span>';
-    Common::renderSocialLogin('yandex');
-
-    echo '<span class="margin-right-mid"></span>';
-    Common::renderSocialLogin('twitter');
-    */
 ?>
 </div>
 <div class="nojs-show">

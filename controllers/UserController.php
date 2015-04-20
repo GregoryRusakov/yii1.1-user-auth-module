@@ -141,10 +141,15 @@ class UserController extends Controller
         }
         
         $modelUser=Users::model()->findByPk($userId);
-        $modelUser->setScenario('lastLogin');
-        $modelUser->logintoken = null;
-        $modelUser->save();
-        
+        if (!empty($modelUser)){
+            $modelUser->setScenario('lastLogin');
+            $modelUser->logintoken = null;
+            $modelUser->save();
+        }
+        else{
+            //Yii::app()->user->setFlash('error', 'User not found while logout');
+        }
+                
         Yii::app()->user->logout();
         $this->redirect(Yii::app()->user->returnUrl);   
     }      
