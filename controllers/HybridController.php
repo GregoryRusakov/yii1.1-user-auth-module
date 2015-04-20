@@ -27,8 +27,8 @@ class HybridController extends Controller
             throw new CHttpException(404, 'Incorrect login query');
         }
         
-        require_once( "/../../../../myphp/hybridauth/Hybrid/Auth.php" );
-        $config=require( "/../../../../myphp/hybridauth/config.php" );
+        require_once(__DIR__ . "/../../../../myphp/hybridauth/Hybrid/Auth.php" );
+        $config=require(__DIR__ . "/../../../../myphp/hybridauth/config.php" );
      
         $config['base_url']=Yii::app()->getBaseUrl(true) . $config['base_url'];
         
