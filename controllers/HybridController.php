@@ -58,6 +58,9 @@ class HybridController extends Controller
             
         }
         
+        //var_dump($user_profile);
+        //exit();
+        
         try{
             $user=$this->getUserByServiceProfile($user_profile, $service);
         }catch (Exception $ex){
@@ -89,16 +92,6 @@ class HybridController extends Controller
             }
             </script>';
         
-        /*$loggedUserPage=Yii::app()->user->getState('openPageAfterLogin');
-        if ($loggedUserPage==null){
-            $loggedUserPage=Yii::app()->user->returnUrl;
-        }
-        if ($loggedUserPage==null){
-            $loggedUserPage=Common::getParam('profilePage');   
-        }
-        Yii::app()->user->setState('openPageAfterLogin', null);
-        $this->redirect($loggedUserPage);   
-        */
     }
     
     private function getUserByServiceProfile($serviceProfile, $service){
@@ -116,12 +109,16 @@ class HybridController extends Controller
             $serviceUser=new AuthServices;
             $serviceUser->date_connected=$currentDateString;
             $serviceUser->provider_name=$service;
-            
+
+            //check user in database by email
+            $siteUser=Users::model()->getByEmail($serviceUserEmail);
         }
-        
-        //check user in database by email
-        $siteUser=Users::model()->getByEmail($serviceUserEmail);
-        
+        else{
+            //serivce found in database
+            $userId=$serviceUser->user_id;
+            $siteUser=Users::model()->findByPk($userId);
+        }
+                
         if ($siteUser==null){
             //create database user
             $siteUser=new Users();
@@ -142,9 +139,18 @@ class HybridController extends Controller
         
         $siteUser->scenario='serviceLogin';
         $siteUser->full_name=$serviceProfile->firstName . ' ' . $serviceProfile->lastName;
-        $siteUser->username=$serviceProfile->firstName . '' . $serviceProfile->lastName;
+        
+        if (array_key_exists('username', $serviceProfile) && !empty($serviceProfile->username)){
+            $siteUser->username=$serviceProfile->username;
+        }
+        else{
+            $siteUser->username=$serviceProfile->firstName . '' . $serviceProfile->lastName;
+        }
+        
         $siteUser->date_lastlogin=$currentDateString;
-        $siteUser->email=$serviceUserEmail;
+        if (empty($siteUser->email)){
+            $siteUser->email=$serviceUserEmail;
+        }
         $siteUser->comments='Updated from ' . ucwords($service);
             
         if ($siteUser->saveModel()===false){

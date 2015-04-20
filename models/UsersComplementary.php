@@ -10,7 +10,7 @@ class UsersComplementary extends CActiveRecord
         
 	public function tableName()
 	{
-		return 'Users_complementary';
+		return 'users_complementary';
 	}
 
 	/**
