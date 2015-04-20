@@ -141,19 +141,19 @@ class HybridController extends Controller
             //not connected before
             $serviceUser=new AuthServices;
             $serviceUser->user_id=$userId;
-            $serviceUser->date_connected=$currentDateString;
             $serviceUser->provider_name=$service;
             $isChanged=true;
         }
-        else{
-            if (!$serviceUser->connected || $serviceUser->date_connected==null){
-                $isChanged=true;
-                $$serviceUser->connected=true;
-                $dt = new DateTime();
-                $currentDateString=$dt->format(Common::getParam('dateFormat'));    
-                $serviceUser->date_connected=$currentDateString;
-                $serviceUser->connected_manual=true;
-            }
+
+        if (!$serviceUser->connected || $serviceUser->date_connected==null){
+            $serviceUser->connected=true;
+            $dt = new DateTime();
+            $currentDateString=$dt->format(Common::getParam('dateFormat'));    
+            $serviceUser->date_connected=$currentDateString;
+            $serviceUser->connected_manual=true;
+            $serviceUser->service_user_email=$serviceUserEmail;
+            $serviceUser->service_user_id=$serviceUserId;
+            $isChanged=true;
         }
         
         if ($isChanged){

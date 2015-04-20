@@ -55,7 +55,6 @@
 
 <hr>
   
-<br><br>
 <div class="nojs-hide">
 <?php 
 
