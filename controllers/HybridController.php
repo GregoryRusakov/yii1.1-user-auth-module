@@ -14,18 +14,15 @@ class HybridController extends Controller
 {
     
     public function actionIndex(){
-        echo "Hybrid auth";
+        echo "OK";
     }     
 
-    public function actionTest(){
-        var_dump($_POST);
-        echo "Hybrid test";
-    }     
-
-    public function actionLogin($service){
+    public function actionConnect($service){
         if (empty($service)){
             throw new CHttpException(404, 'Incorrect login query');
         }
+        
+        $serviceName=ucwords($service);
         
         require_once(__DIR__ . "/../../../../myphp/hybridauth/Hybrid/Auth.php" );
         $config=require(__DIR__ . "/../../../../myphp/hybridauth/config.php" );
@@ -34,16 +31,53 @@ class HybridController extends Controller
         
         try{
             $hybridauth = new Hybrid_Auth($config);
-
             $adapter = $hybridauth->authenticate($service);
-            //var_dump($adapter);
             $user_profile = $adapter->getUserProfile();
-        }catch(Exception $ex){
-            //var_dump($ex);
             
+        }catch(Exception $ex){
             $errorMessage=$ex->getMessage();
             Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
-            Yii::app()->user->setFlash('warning', 'Вход через сервис ' . $service . ' не был выполнен.');
+            Yii::app()->user->setFlash('warning', 'Подключение учетной записи ' . $serviceName . ' не было выполнено.');
+            $this->redirect(array('/userprofiles'));
+        }
+        
+        //var_dump($user_profile);
+        //exit();
+        
+        try{
+            $this->connectServiceProfile($user_profile, $service);
+            
+        }catch (Exception $ex){
+            Yii::log($ex->getMessage(), 'error', 'Connecting accout ' . $serviceName);
+            throw new CHttpException(404, 'Error connecting account ' . $serviceName);
+        }
+      
+        Yii::app()->user->setFlash('info', 'Учетная запись ' . $serviceName . ' подключена.');
+        $this->redirect(array('/userprofiles'));
+        
+    }
+    
+    public function actionLogin($service){
+        if (empty($service)){
+            throw new CHttpException(404, 'Incorrect login query');
+        }
+        
+        $serviceName=ucwords($service);
+        
+        require_once(__DIR__ . "/../../../../myphp/hybridauth/Hybrid/Auth.php" );
+        $config=require(__DIR__ . "/../../../../myphp/hybridauth/config.php" );
+     
+        $config['base_url']=Yii::app()->getBaseUrl(true) . $config['base_url'];
+        
+        try{
+            $hybridauth = new Hybrid_Auth($config);
+            $adapter = $hybridauth->authenticate($service);
+            $user_profile = $adapter->getUserProfile();
+            
+        }catch(Exception $ex){
+            $errorMessage=$ex->getMessage();
+            Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
+            Yii::app()->user->setFlash('warning', 'Вход с учетной записью ' . $serviceName . ' не был выполнен.');
             $errorLoginUrl=Yii::app()->createUrl('');
             echo '
                 <script>
@@ -64,8 +98,8 @@ class HybridController extends Controller
         try{
             $user=$this->getUserByServiceProfile($user_profile, $service);
         }catch (Exception $ex){
-            Yii::log($ex->getMessage(), 'error', 'login thrught ' . $service);
-            throw new CHttpException(404, 'Error logging throught service ' . ucwords($service));
+            Yii::log($ex->getMessage(), 'error', 'Login with account' . $service);
+            throw new CHttpException(404, 'Error logging with account ' . ucwords($service));
         }
         
         //login user
@@ -92,6 +126,44 @@ class HybridController extends Controller
             }
             </script>';
         
+    }
+    
+    private function connectServiceProfile($serviceProfile, $service){
+        $userId=Yii::app()->user->id;
+        
+        $serviceUserId=$serviceProfile->identifier;
+        $serviceUserEmail=$serviceProfile->emailVerified;
+        
+        $serviceUser=AuthServices::model()->getService($userId, $service, $serviceUserId);
+
+        $isChanged=false;
+        if ($serviceUser==null){
+            //not connected before
+            $serviceUser=new AuthServices;
+            $serviceUser->user_id=$userId;
+            $serviceUser->date_connected=$currentDateString;
+            $serviceUser->provider_name=$service;
+            $isChanged=true;
+        }
+        else{
+            if (!$serviceUser->connected || $serviceUser->date_connected==null){
+                $isChanged=true;
+                $$serviceUser->connected=true;
+                $dt = new DateTime();
+                $currentDateString=$dt->format(Common::getParam('dateFormat'));    
+                $serviceUser->date_connected=$currentDateString;
+                $serviceUser->connected_manual=true;
+            }
+        }
+        
+        if ($isChanged){
+            if ($serviceUser->saveModel()===false){
+                throw new CHttpException(404, CHtml::errorSummary($serviceUser));
+            }  
+        }
+        
+        return true;
+                    
     }
     
     private function getUserByServiceProfile($serviceProfile, $service){

@@ -123,4 +123,29 @@ class AuthServices extends CActiveRecord
 
             return $model;
         }
+        
+        public function getService($userId, $service, $serviceUserId){
+            $criteria=new CDbCriteria;
+            $criteria->select = '*';
+            $criteria->limit=1;
+            $criteria->compare('user_id',$userId, false); 
+            $criteria->compare('LOWER(provider_name)',strtolower($service), false); 
+            $criteria->compare('LOWER(service_user_id)',strtolower($serviceUserId), false); 
+            $model=$this->find($criteria);
+
+            return $model;           
+        }
+        
+        public function serviceConnected($userId, $service){
+            $criteria=new CDbCriteria;
+            $criteria->select = 'connected';
+            $criteria->limit=1;
+            $criteria->compare('user_id',$userId, false); 
+            $criteria->compare('LOWER(provider_name)',strtolower($service), false); 
+            
+            $model=$this->find($criteria);        
+            
+            return ($model!=null);
+        }
+        
 }

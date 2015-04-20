@@ -23,7 +23,6 @@ class UserController extends Controller
 
     public function actionLogin(){
     
-
         $isAjax=Yii::app()->request->isAjaxRequest;
           
         $formLogin=new LoginForm;
