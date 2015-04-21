@@ -20,6 +20,7 @@ class Users extends CActiveRecord{
     public $password_entered;
     public $password_initial;
     public $verifyCode;
+    public $termsSigned;
 
     /**
      * @return string the associated database table name
@@ -41,7 +42,10 @@ class Users extends CActiveRecord{
                     array('email, full_name, comments', 'length', 'max'=>255),
                     array('username', 'length', 'max'=>100),
                     array('email, username, full_name', 'safe', 'on'=>'search'),
-
+                    
+                    array('terms_version', 'numerical', 'integerOnly'=>true),
+                    array('terms_version', 'required', 'on'=>'insert', 'message'=>Yii::t('AuthModule.forms','Please sign terms and conditions')),
+                
                     array('password_entered', 'safe'),
                     array('email', 'email', 'except'=>'lastLogin'),
                     array('username, email', 'required', 'on'=>'insert, update'),
@@ -51,16 +55,15 @@ class Users extends CActiveRecord{
                     
                     //array('username', 'unique','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
                 
-                
                     array('username', 'unique', 'criteria'=>array(
                         'condition'=>'`created_manually`=:secondKey',
                         'params'=>array(':secondKey'=>$this->created_manually),
                         ),
                     'message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
                                 
-
                     array('username', 'safe', 'except'=>'update'),
                     array('username', 'unsafe', 'on'=>'update'),
+                    array('termsSigned', 'safe'),
                                   
                     array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastLogin, serviceLogin'),
             );
@@ -92,6 +95,9 @@ class Users extends CActiveRecord{
                     'comments' => Yii::t('AuthModule.forms','Comments'),
                     'password_entered' => Yii::t('AuthModule.forms','Password'),
                     'verifyCode'=>Yii::t('AuthModule.forms','Verify code'),
+                    'termsSigned'=>Yii::t('AuthModule.forms','Terms and conditions'),
+                    'terms_version'=>Yii::t('AuthModule.forms','Terms and conditions'),
+                
             );
     }
 
@@ -153,9 +159,9 @@ class Users extends CActiveRecord{
                 $this->password_hash = $hash;
                 $dt = new DateTime();
                 $this->date_reg=$dt->format(Common::getParam('dateFormat'));                   
-                //$ip=Yii::app()->request->getUserHostAddress();
                 $ip=Common::getUserIp();
                 $this->ip_endorsed=$ip;
+
             }
             
             elseif ($this->scenario=='update' || $this->scenario=='passRestore'){

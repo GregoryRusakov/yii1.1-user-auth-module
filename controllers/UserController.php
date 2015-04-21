@@ -164,6 +164,10 @@ class UserController extends Controller
 
             $model->attributes=$_POST['Users'];
 
+            if ($model->termsSigned>0){
+                $model->terms_version=1;
+            }
+                
             if(!$model->validate()){
                 //haven't passed validators
                 Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Incorrect form data'));
@@ -488,8 +492,7 @@ class UserController extends Controller
                 'minLength'=> 4,
                 'testLimit'=>3,
                 'backColor'=>0xFFFFFF,
-
-            ),
+            ),        
         );
     }       
 

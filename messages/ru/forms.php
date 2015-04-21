@@ -76,6 +76,9 @@
 
         'Social login'=>'Вход с помощью социальных сетей',        
         'Unable to login through social networks without JavaScript'=>'Вход через социальные сети не доступен без JavaScript',
-        
+    
+        'Terms version'=>'Версия Соглашения',
+        'Terms and conditions'=>'Пользовательское Соглашение',
+        'Please sign terms and conditions'=>'Пожалуйста подпишите Соглашение или откажитель от регистрации',
     );
 ?>

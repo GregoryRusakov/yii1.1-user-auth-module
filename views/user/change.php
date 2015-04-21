@@ -31,6 +31,8 @@
         $formRender->passwordField('password_entered', Yii::t('AuthModule.forms', 'User form. Password placeholder'));
         $formRender->capthaField('verifyCode');
         if ($isNewRecord){
+            $termsUrl=Yii::app()->createUrl('site/page&view=terms');
+            $formRender->termsField('termsSigned', $termsUrl);
             $formRender->submitButton(Yii::t('AuthModule.forms', 'Registration form. Submit button'));
         }
         else{

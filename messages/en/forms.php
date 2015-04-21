@@ -77,5 +77,8 @@
         
         'Social login'=>'Social login enter',
         'Unable to login through social networks without JavaScript'=>'Unable to login through social networks without JavaScript',        
+        'Terms version'=>'Terms & condition version',
+        'Terms and conditions'=>'Terms and conditions',
+        'Please sign terms and conditions'=>'Please sign terms and conditions or deny registration',
     );
 ?>

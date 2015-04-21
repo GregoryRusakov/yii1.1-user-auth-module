@@ -53,8 +53,10 @@ class UsersComplementary extends CActiveRecord
 			'id' => 'ID',
 			'user_id' => 'User ID',
 			'picture_file' => 'Выбрать фото',
-			'city' => 'Город',
-			'comments' => 'Comments',
+			'city' => 'Город',  
+                        'country' => 'Страна',
+                        'language' => 'Язык',
+			'comments' => 'Комментарии',
 		);
 	}
 
