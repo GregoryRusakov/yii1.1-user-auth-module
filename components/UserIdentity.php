@@ -42,7 +42,7 @@ class UserIdentity extends CUserIdentity
                 }
             }
             
-            $modelUser=Users::model()->getByUserName($this->username);
+            $modelUser=Users::model()->getByUsername($this->username);
             
             if (empty($modelUser)){
                 $this->errorCode=self::ERROR_UNKNOWN_IDENTITY;

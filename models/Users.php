@@ -48,7 +48,16 @@ class Users extends CActiveRecord{
 
                     array('password_entered', 'passValidator', 'except'=>'passRestore, activation, update, lastLogin, serviceLogin'),
                     array('email', 'unique','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastLogin'),
-                    array('username', 'unique','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
+                    
+                    //array('username', 'unique','message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
+                
+                
+                    array('username', 'unique', 'criteria'=>array(
+                        'condition'=>'`created_manually`=:secondKey',
+                        'params'=>array(':secondKey'=>$this->created_manually),
+                        ),
+                    'message'=>Yii::t('AuthModule.forms', 'Username already taken'),'on'=>'insert'),
+                                
 
                     array('username', 'safe', 'except'=>'update'),
                     array('username', 'unsafe', 'on'=>'update'),
@@ -183,7 +192,7 @@ class Users extends CActiveRecord{
         
     }
 
-    public function getByUserName($username)
+    public function getByUsername($username, $isCreatedManually=null)
     {
         
         $usernameLow = mb_strtolower($username,'UTF-8');
@@ -191,11 +200,13 @@ class Users extends CActiveRecord{
         $criteria=new CDbCriteria;
         $criteria->select = '*';
         $criteria->limit=1;
-        //$criteria->compare('LOWER(username)',strtolower($username), false); 
+
         $criteria->compare('LOWER(username)',$usernameLow, false); 
+        if ($isCreatedManually!==null){
+            $criteria->compare('created_manually',$isCreatedManually, false); 
+        }
         $model=$this->find($criteria);
 
         return $model;
     }
-    
 }

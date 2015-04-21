@@ -148,7 +148,7 @@ class Common {
         return true;
     }
     
-    public function renderExtAccountWindow(){
+    public function renderExtAccountWindowJS(){
         
         Yii::app()->clientScript->registerScript("openExtAccountWindow", "
             function openExtAccountWindow(url, serviceName=''){
@@ -211,17 +211,18 @@ class Common {
             
         $checkBoxParams=array('label'=>Yii::t('userProfile', $accountName), 'checked'=>$isDisconnect, 'onChange'=>$onChangeJS);
         $formRender->checkboxField($checkBoxParams);
-        
-        
-        /*$checkedString=$isDisconnect ? 'checked' : ''; 
-        
-        echo '<div class="form-group">
-                <label class="control-label col-sm-3">' . Yii::t('userProfile', $accountName) . '</label>
-                <div class="col-sm-8">
-                    <input ' . $checkedString . ' data-toggle="toggle" data-onstyle="success" type="checkbox" onchange="' . $onChangeJS . '">
-                </div>
-              </div>';
-        */
+
     }    
+    
+    public function renderExternalLoginCloseJS($url){
+        echo '
+            <script>
+            if (window.opener){
+                window.opener.location.href="' . $url . '"
+                window.close();
+            }else {
+            }
+            </script>';
+    }
     
 }

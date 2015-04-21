@@ -43,14 +43,7 @@ class HybridController extends Controller
             Yii::log($errorMessage, CLogger::LEVEL_ERROR, 'hybridAuth');
         }
         
-        echo '
-            <script>
-            if (window.opener){
-                window.opener.location.href="' . Yii::app()->createUrl('userprofiles') . '"
-                window.close();
-            }else {
-            }
-            </script>';     
+        Common::renderExternalLoginCloseJS(Yii::app()->createUrl('userprofiles'));
         
     }
 
@@ -75,14 +68,7 @@ class HybridController extends Controller
             $errorMessage=$ex->getMessage();
             Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
             Yii::app()->user->setFlash('warning', 'Подключение учетной записи ' . $serviceName . ' не было выполнено.');
-            echo 'window.close();
-                <script>
-                if (window.opener){
-                    window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['errorLoginPage']) . '"
-                    window.close();
-                }else {
-                }
-                </script>';   
+            Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
             exit();
         }
         
@@ -91,30 +77,12 @@ class HybridController extends Controller
             
         }catch (Exception $ex){
             Yii::log($ex->getMessage(), 'error', 'Connecting accout ' . $serviceName);
-            //throw new CHttpException(404, 'Error connecting account ' . $serviceName);
-        
-            echo 'window.close();
-                <script>
-                if (window.opener){
-                    window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['errorLoginPage']) . '"
-                    window.close();
-                }else {
-                }
-                </script>';            
+            Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
             exit();
         }
       
         Yii::app()->user->setFlash('info', 'Учетная запись ' . $serviceName . ' подключена.');
-        
-        echo '
-            <script>
-            if (window.opener){
-                window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['successLoginPage']) . '"
-                window.close();
-            }else {
-            }
-            </script>';
-        
+        Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['successLoginPage']));
     }
     
     public function actionLogin($service){
@@ -138,27 +106,20 @@ class HybridController extends Controller
             $errorMessage=$ex->getMessage();
             Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
             Yii::app()->user->setFlash('warning', 'Вход с учетной записью ' . $serviceName . ' не был выполнен.');
-            echo '
-                <script>
-                if (window.opener){
-                    window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['errorLoginPage']) . '"
-                    window.close();
-                }else {
-                }
-                </script>';
 
+            Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
             exit();
             
         }
-        
-        //var_dump($user_profile);
-        //exit();
-        
+
         try{
             $user=$this->getUserByServiceProfile($user_profile, $service);
         }catch (Exception $ex){
-            Yii::log($ex->getMessage(), 'error', 'Login with account' . $service);
-            throw new CHttpException(404, 'Error logging with account ' . ucwords($service));
+            $errorMessage=$ex->getMessage();
+            Yii::log($errorMessage, 'error', 'Login with account' . $service);
+            Yii::app()->user->setFlash('error', $errorMessage);
+            Common::renderExternalLoginCloseJS(Yii::app()->createUrl(''));
+            exit();
         }
         
         //login user
@@ -176,14 +137,7 @@ class HybridController extends Controller
             exit();
         }        
 
-        echo '<script>
-            if (window.opener){
-                window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['successLoginPage']) . '"
-                window.close();
-            }else {
-            }
-            </script>';
-        
+        Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['successLoginPage']));
     }
     
     private function connectServiceProfile($serviceProfile, $service){
@@ -230,25 +184,42 @@ class HybridController extends Controller
         $serviceUserId=$serviceProfile->identifier;
         $serviceUserEmail=$serviceProfile->emailVerified;
 
+        //define service username
+        if (array_key_exists('username', $serviceProfile) && !empty($serviceProfile->username)){
+            $serviceUsername=$serviceProfile->username;
+        }
+        else{
+            $serviceUsername=$serviceProfile->firstName . '' . $serviceProfile->lastName;
+        }        
+        
         $dt = new DateTime();
         $currentDateString=$dt->format(Common::getParam('dateFormat'));                
         
         $ExtAccount=ExtAccounts::model()->getUserByServiceIndentifier($service, $serviceUserId);
         if ($ExtAccount==null){
-            //create service user
+            //create external account
             $ExtAccount=new ExtAccounts;
             $ExtAccount->date_connected=$currentDateString;
             $ExtAccount->provider_name=$service;
 
             //check user in database by email
-            $siteUser=Users::model()->getByEmail($serviceUserEmail);
+            if (!empty($serviceUserEmail)){
+                $siteUser=Users::model()->getByEmail($serviceUserEmail);
+            }
+            else{
+                //no external email, so we try to find by existing non manually created users
+                //$isCreatedManually=false;
+                //$siteUser=Users::model()->getByUsername($serviceUsername, $isCreatedManually);
+                $accountName=Yii::t('userProfile', $service);
+                throw new CHttpException(404, 'Нет адреса электронной почты в учетной записи ' . $accountName);
+            }
         }
         else{
             //serivce found in database
             $userId=$ExtAccount->user_id;
             $siteUser=Users::model()->findByPk($userId);
         }
-                
+               
         if ($siteUser==null){
             //create database user
             $siteUser=new Users();
@@ -261,13 +232,13 @@ class HybridController extends Controller
         else{
             //update database user
             $userContemporary=UsersComplementary::model()->getByUserById($siteUser->id);
-            $isNewUserContemporary=false;
         }
         
         if ($userContemporary==null){
             $userContemporary=new UsersComplementary;
-            $isNewUserContemporary=true;
         }
+        
+        $isNewUserContemporary=($userContemporary==null);
         
         $siteUser->scenario='serviceLogin';
         $siteUser->date_lastlogin=$currentDateString;
@@ -275,14 +246,9 @@ class HybridController extends Controller
         if (!$siteUser->created_manually){
             //update user data if it is not created manually
             
+            $siteUser->username=$serviceUsername;
             $siteUser->full_name=$serviceProfile->firstName . ' ' . $serviceProfile->lastName;
 
-            if (array_key_exists('username', $serviceProfile) && !empty($serviceProfile->username)){
-                $siteUser->username=$serviceProfile->username;
-            }
-            else{
-                $siteUser->username=$serviceProfile->firstName . '' . $serviceProfile->lastName;
-            }
             if (empty($siteUser->email)){
                $siteUser->email=$serviceUserEmail;
             }

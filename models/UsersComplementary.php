@@ -22,7 +22,7 @@ class UsersComplementary extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('user_id', 'required'),
-                        array('user_id, picture_file', 'required', 'except'=>'serviceLogin'),
+                        //array('user_id, picture_file', 'required', 'except'=>'serviceLogin'),
 			array('user_id', 'numerical', 'integerOnly'=>true),
 			array('picture_file, city, country, comments', 'length', 'max'=>255),
                         array('language', 'length', 'max'=>50),
