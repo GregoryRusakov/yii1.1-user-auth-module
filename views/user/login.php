@@ -65,7 +65,9 @@
     }
     echo '<span class="col-sm-2 align-right">'.$socialLoginLabel.'</span>';
     
-    Common::renderSocialLogin('facebook', true);
+    Common::renderExtAccountWindow();
+    
+    Common::renderSocialLogin('facebook');
 
     echo '<span class="margin-right-mid"></span>';
     Common::renderSocialLogin('google');

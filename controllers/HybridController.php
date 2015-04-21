@@ -16,13 +16,50 @@ class HybridController extends Controller
     public function actionIndex(){
         echo "OK";
     }     
+    
+    public function actionDisconnect($service){
+        
+        if (empty($service)){
+            throw new CHttpException(404, 'Incorrect login query');
+        }   
+        
+        $userId=Yii::app()->user->id;
+        if (empty($userId)){
+            throw new CHttpException(404, 'Incorrect Id');
+        }   
+
+        $criteria = new CDbCriteria;
+        $criteria->compare('user_id', $userId, false); 
+        $criteria->compare('provider_name', $service, false); 
+
+        $accountName=Yii::t('userProfile', $service);
+                
+        try{
+            ExtAccounts::model()->deleteAll($criteria);
+            Yii::app()->user->setFlash('info', 'Учетная запись ' . $accountName . ' успешно отключена.');    
+            
+        }catch(Exception $ex){
+            $errorMessage=$ex->getMessage();
+            Yii::log($errorMessage, CLogger::LEVEL_ERROR, 'hybridAuth');
+        }
+        
+        echo '
+            <script>
+            if (window.opener){
+                window.opener.location.href="' . Yii::app()->createUrl('userprofiles') . '"
+                window.close();
+            }else {
+            }
+            </script>';     
+        
+    }
 
     public function actionConnect($service){
         if (empty($service)){
             throw new CHttpException(404, 'Incorrect login query');
         }
         
-        $serviceName=ucwords($service);
+        $serviceName=Yii::t('userProfile', $service);
         
         require_once(__DIR__ . "/../../../../myphp/hybridauth/Hybrid/Auth.php" );
         $config=require(__DIR__ . "/../../../../myphp/hybridauth/config.php" );
@@ -38,22 +75,45 @@ class HybridController extends Controller
             $errorMessage=$ex->getMessage();
             Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
             Yii::app()->user->setFlash('warning', 'Подключение учетной записи ' . $serviceName . ' не было выполнено.');
-            $this->redirect(array('/userprofiles'));
+            echo 'window.close();
+                <script>
+                if (window.opener){
+                    window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['errorLoginPage']) . '"
+                    window.close();
+                }else {
+                }
+                </script>';   
+            exit();
         }
-        
-        //var_dump($user_profile);
-        //exit();
         
         try{
             $this->connectServiceProfile($user_profile, $service);
             
         }catch (Exception $ex){
             Yii::log($ex->getMessage(), 'error', 'Connecting accout ' . $serviceName);
-            throw new CHttpException(404, 'Error connecting account ' . $serviceName);
+            //throw new CHttpException(404, 'Error connecting account ' . $serviceName);
+        
+            echo 'window.close();
+                <script>
+                if (window.opener){
+                    window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['errorLoginPage']) . '"
+                    window.close();
+                }else {
+                }
+                </script>';            
+            exit();
         }
       
         Yii::app()->user->setFlash('info', 'Учетная запись ' . $serviceName . ' подключена.');
-        $this->redirect(array('/userprofiles'));
+        
+        echo '
+            <script>
+            if (window.opener){
+                window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['successLoginPage']) . '"
+                window.close();
+            }else {
+            }
+            </script>';
         
     }
     
@@ -62,7 +122,7 @@ class HybridController extends Controller
             throw new CHttpException(404, 'Incorrect login query');
         }
         
-        $serviceName=ucwords($service);
+        $serviceName=Yii::t('userProfile', $service);
         
         require_once(__DIR__ . "/../../../../myphp/hybridauth/Hybrid/Auth.php" );
         $config=require(__DIR__ . "/../../../../myphp/hybridauth/config.php" );
@@ -78,11 +138,10 @@ class HybridController extends Controller
             $errorMessage=$ex->getMessage();
             Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
             Yii::app()->user->setFlash('warning', 'Вход с учетной записью ' . $serviceName . ' не был выполнен.');
-            $errorLoginUrl=Yii::app()->createUrl('');
             echo '
                 <script>
                 if (window.opener){
-                    window.opener.location.href="' . $errorLoginUrl . '"
+                    window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['errorLoginPage']) . '"
                     window.close();
                 }else {
                 }
@@ -117,10 +176,9 @@ class HybridController extends Controller
             exit();
         }        
 
-        $successLoginUrl=Yii::app()->createUrl('userprofiles');
         echo '<script>
             if (window.opener){
-                window.opener.location.href="' . $successLoginUrl . '"
+                window.opener.location.href="' . Yii::app()->createUrl(Yii::app()->params['successLoginPage']) . '"
                 window.close();
             }else {
             }

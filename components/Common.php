@@ -148,53 +148,80 @@ class Common {
         return true;
     }
     
-    public function renderSocialLogin($serviceName, $renderScript=false){
+    public function renderExtAccountWindow(){
         
-        if ($renderScript){
-            Yii::app()->clientScript->registerScript("serviceWindow", "
-                function login(url, serviceName=''){
-                    var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
-                         screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
-                         outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
-                         outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
-                         width    = outerWidth/2+50,
-                         height   = outerHeight/2+50,
-                         left     = parseInt(screenX + ((outerWidth - width) / 2), 10)+25,
-                         top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10)+25;
-                       
-                    if (serviceName=='google'){
-                        width=520;
-                        height=720;
-                    }
-                    var  features = (
-                            'width=' + width +
-                            ',height=' + height +
-                            ',left=' + left +
-                            ',top=' + top
+        Yii::app()->clientScript->registerScript("openExtAccountWindow", "
+            function openExtAccountWindow(url, serviceName=''){
+                var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
+                     screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
+                     outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
+                     outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
+                     width    = outerWidth/2+50,
+                     height   = outerHeight/2+50,
+                     left     = parseInt(screenX + ((outerWidth - width) / 2), 10)+25,
+                     top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10)+25;
 
-                          );
-
-                    newwindow=window.open(url,'ServiceLogin',features);
-
-                   if (window.focus) {
-                       newwindow.focus();
-                   }
-                   return false;
+                if (serviceName=='google'){
+                    width=520;
+                    height=720;
                 }
-                ", CClientScript::POS_HEAD);
-        } //render window script
+                var  features = (
+                        'width=' + width +
+                        ',height=' + height +
+                        ',left=' + left +
+                        ',top=' + top
+
+                      );
+
+                newwindow=window.open(url,'ServiceLogin',features);
+
+               if (window.focus) {
+                   newwindow.focus();
+               }
+               return false;
+            }
+            ", CClientScript::POS_HEAD);
+    }
+    
+    public function renderSocialLogin($accountName){
         
-        $serviceNameLower=strtolower($serviceName);
-        $loginUrl=Yii::app()->createUrl('auth/hybrid/login', array('service'=>$serviceNameLower));
-        $imageUrl='images/icons/' . $serviceNameLower . '.png';
+        $accountNameLower=strtolower($accountName);
+        $loginUrl=Yii::app()->createUrl('auth/hybrid/login', array('service'=>$accountNameLower));
+        $imageUrl='images/icons/' . $accountNameLower . '.png';
         
-        $onClickJS='login("' . $loginUrl . '", "' . $serviceName . '"); return false;';
+        $onClickJS='openExtAccountWindow("' . $loginUrl . '", "' . $accountName . '"); return false;';
         
-        $imgHtml=Chtml::image($imageUrl, $serviceName, array('class'=>'socialIcon'));
+        $imgHtml=Chtml::image($imageUrl, $accountName, array('class'=>'socialIcon'));
         
         //show icon with link
         echo CHtml::link($imgHtml, $loginUrl, array('onclick'=>$onClickJS));
+    }    
+    
+    public function renderSocialConnect($accountName, $formRender, $isDisconnect=false){
+            
+        $accountNameLower=strtolower($accountName);
+        
+        if ($isDisconnect){
+            $actionUrl=Yii::app()->createUrl('auth/hybrid/disconnect', array('service'=>$accountNameLower));
+        }else{
+            $actionUrl=Yii::app()->createUrl('auth/hybrid/connect', array('service'=>$accountNameLower));
+        }
+        
+        $onChangeJS='openExtAccountWindow(\'' . $actionUrl . '\', \'' . $accountName . '\'); return false;';
+            
+        $checkBoxParams=array('label'=>Yii::t('userProfile', $accountName), 'checked'=>$isDisconnect, 'onChange'=>$onChangeJS);
+        $formRender->checkboxField($checkBoxParams);
         
         
-    }
+        /*$checkedString=$isDisconnect ? 'checked' : ''; 
+        
+        echo '<div class="form-group">
+                <label class="control-label col-sm-3">' . Yii::t('userProfile', $accountName) . '</label>
+                <div class="col-sm-8">
+                    <input ' . $checkedString . ' data-toggle="toggle" data-onstyle="success" type="checkbox" onchange="' . $onChangeJS . '">
+                </div>
+              </div>';
+        */
+    }    
+    
 }

@@ -28,6 +28,7 @@ class UsersComplementary extends CActiveRecord
                         array('language', 'length', 'max'=>50),
                         array('picture_url', 'length', 'max'=>1024),
 			array('user_id, picture_file, picture_url, city, country, language, comments', 'safe', 'on'=>'search'),
+                        array('tmpUploadedPicture', 'safe'),
 		);
 	}
 
