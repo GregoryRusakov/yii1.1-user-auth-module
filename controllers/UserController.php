@@ -164,13 +164,14 @@ class UserController extends Controller
 
             $model->attributes=$_POST['Users'];
 
-                if(!$model->validate()){
+            if(!$model->validate()){
                 //haven't passed validators
                 Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Incorrect form data'));
                 $this->render('change', array('model'=>$model));
                 return;
             }
 
+            $model->created_manually=true;
             if (!$model->saveModel()){
                 $this->render('change', array('model'=>$model));
                 return;

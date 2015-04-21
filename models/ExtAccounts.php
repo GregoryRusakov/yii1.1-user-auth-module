@@ -4,14 +4,14 @@
  * This is the model class for table "auth_services".
  *
  */
-class AuthServices extends CActiveRecord
+class ExtAccounts extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'auth_services';
+		return 'auth_ext_accounts';
 	}
 
 	/**

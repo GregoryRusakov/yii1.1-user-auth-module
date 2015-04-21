@@ -134,31 +134,31 @@ class HybridController extends Controller
         $serviceUserId=$serviceProfile->identifier;
         $serviceUserEmail=$serviceProfile->emailVerified;
         
-        $serviceUser=AuthServices::model()->getService($userId, $service, $serviceUserId);
+        $ExtAccount=ExtAccounts::model()->getService($userId, $service, $serviceUserId);
 
         $isChanged=false;
-        if ($serviceUser==null){
+        if ($ExtAccount==null){
             //not connected before
-            $serviceUser=new AuthServices;
-            $serviceUser->user_id=$userId;
-            $serviceUser->provider_name=$service;
+            $ExtAccount=new ExtAccounts;
+            $ExtAccount->user_id=$userId;
+            $ExtAccount->provider_name=$service;
             $isChanged=true;
         }
 
-        if (!$serviceUser->connected || $serviceUser->date_connected==null){
-            $serviceUser->connected=true;
+        if (!$ExtAccount->connected || $ExtAccount->date_connected==null){
+            $ExtAccount->connected=true;
             $dt = new DateTime();
             $currentDateString=$dt->format(Common::getParam('dateFormat'));    
-            $serviceUser->date_connected=$currentDateString;
-            $serviceUser->connected_manual=true;
-            $serviceUser->service_user_email=$serviceUserEmail;
-            $serviceUser->service_user_id=$serviceUserId;
+            $ExtAccount->date_connected=$currentDateString;
+            $ExtAccount->connected_manually=true;
+            $ExtAccount->service_user_email=$serviceUserEmail;
+            $ExtAccount->service_user_id=$serviceUserId;
             $isChanged=true;
         }
         
         if ($isChanged){
-            if ($serviceUser->saveModel()===false){
-                throw new CHttpException(404, CHtml::errorSummary($serviceUser));
+            if ($ExtAccount->saveModel()===false){
+                throw new CHttpException(404, CHtml::errorSummary($ExtAccount));
             }  
         }
         
@@ -175,80 +175,89 @@ class HybridController extends Controller
         $dt = new DateTime();
         $currentDateString=$dt->format(Common::getParam('dateFormat'));                
         
-        $serviceUser=AuthServices::model()->getUserByServiceIndentifier($service, $serviceUserId);
-        if ($serviceUser==null){
+        $ExtAccount=ExtAccounts::model()->getUserByServiceIndentifier($service, $serviceUserId);
+        if ($ExtAccount==null){
             //create service user
-            $serviceUser=new AuthServices;
-            $serviceUser->date_connected=$currentDateString;
-            $serviceUser->provider_name=$service;
+            $ExtAccount=new ExtAccounts;
+            $ExtAccount->date_connected=$currentDateString;
+            $ExtAccount->provider_name=$service;
 
             //check user in database by email
             $siteUser=Users::model()->getByEmail($serviceUserEmail);
         }
         else{
             //serivce found in database
-            $userId=$serviceUser->user_id;
+            $userId=$ExtAccount->user_id;
             $siteUser=Users::model()->findByPk($userId);
         }
                 
         if ($siteUser==null){
             //create database user
             $siteUser=new Users();
+            $siteUser->created_manually=false;
             $siteUser->date_reg=$currentDateString;
             $siteUser->activated=true; //do not need activation by email
             $siteUser->ip_endorsed=Common::getUserIp();
             $userContemporary=new UsersComplementary;
-            
         }
         else{
             //update database user
             $userContemporary=UsersComplementary::model()->getByUserById($siteUser->id);
+            $isNewUserContemporary=false;
         }
         
         if ($userContemporary==null){
             $userContemporary=new UsersComplementary;
+            $isNewUserContemporary=true;
         }
         
         $siteUser->scenario='serviceLogin';
-        $siteUser->full_name=$serviceProfile->firstName . ' ' . $serviceProfile->lastName;
-        
-        if (array_key_exists('username', $serviceProfile) && !empty($serviceProfile->username)){
-            $siteUser->username=$serviceProfile->username;
-        }
-        else{
-            $siteUser->username=$serviceProfile->firstName . '' . $serviceProfile->lastName;
-        }
-        
         $siteUser->date_lastlogin=$currentDateString;
-        if (empty($siteUser->email)){
-            $siteUser->email=$serviceUserEmail;
-        }
-        $siteUser->comments='Updated from ' . ucwords($service);
+        
+        if (!$siteUser->created_manually){
+            //update user data if it is not created manually
             
+            $siteUser->full_name=$serviceProfile->firstName . ' ' . $serviceProfile->lastName;
+
+            if (array_key_exists('username', $serviceProfile) && !empty($serviceProfile->username)){
+                $siteUser->username=$serviceProfile->username;
+            }
+            else{
+                $siteUser->username=$serviceProfile->firstName . '' . $serviceProfile->lastName;
+            }
+            if (empty($siteUser->email)){
+               $siteUser->email=$serviceUserEmail;
+            }
+            
+            $siteUser->comments='Updated from ' . ucwords($service);
+        }
+                    
         if ($siteUser->saveModel()===false){
             throw new CHttpException(404, CHtml::errorSummary($siteUser));
         }
         
-        $userContemporary->scenario='serviceLogin';
-        $userContemporary->user_id=$siteUser->id;           
-        $userContemporary->city=$serviceProfile->city;
-        $userContemporary->country=$serviceProfile->country;
-        $userContemporary->picture_url=$serviceProfile->photoURL;
-        $userContemporary->language=$serviceProfile->language;
-        $userContemporary->comments='Updated from ' . ucwords($service);
+        if ($isNewUserContemporary || !$siteUser->created_manually){
+            $userContemporary->scenario='serviceLogin';
+            $userContemporary->user_id=$siteUser->id;           
+            $userContemporary->city=$serviceProfile->city;
+            $userContemporary->country=$serviceProfile->country;
+            $userContemporary->picture_url=$serviceProfile->photoURL;
+            $userContemporary->language=$serviceProfile->language;
+            $userContemporary->comments='Updated from ' . ucwords($service);
 
-        if ($userContemporary->saveModel()===false){
-            throw new CHttpException(404, CHtml::errorSummary($userContemporary));
-        }  
+            if ($userContemporary->saveModel()===false){
+                throw new CHttpException(404, CHtml::errorSummary($userContemporary));
+            }  
+        }
         
         //fill service user data
-        $serviceUser->user_id=$siteUser->id;
-        $serviceUser->connected=true;
-        $serviceUser->service_user_email=$serviceUserEmail;
-        $serviceUser->service_user_id=$serviceUserId;
+        $ExtAccount->user_id=$siteUser->id;
+        $ExtAccount->connected=true;
+        $ExtAccount->service_user_email=$serviceUserEmail;
+        $ExtAccount->service_user_id=$serviceUserId;
               
-        if ($serviceUser->saveModel()===false){
-            throw new CHttpException(404, CHtml::errorSummary($serviceUser));
+        if ($ExtAccount->saveModel()===false){
+            throw new CHttpException(404, CHtml::errorSummary($ExtAccount));
         }  
     
         return $siteUser;
