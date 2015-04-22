@@ -43,7 +43,8 @@ class HybridController extends Controller
             Yii::log($errorMessage, CLogger::LEVEL_ERROR, 'hybridAuth');
         }
         
-        Common::renderExternalLoginCloseJS(Yii::app()->createUrl('userprofiles'));
+        $this->redirect(Yii::app()->createUrl('userprofiles'));
+        //Common::renderExternalLoginCloseJS(Yii::app()->createUrl('userprofiles'));
         
     }
 

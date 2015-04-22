@@ -203,12 +203,12 @@ class Common {
         
         if ($isDisconnect){
             $actionUrl=Yii::app()->createUrl('auth/hybrid/disconnect', array('service'=>$accountNameLower));
+            $onChangeJS='window.location.href=\'' . $actionUrl . '\'; return false;';
         }else{
             $actionUrl=Yii::app()->createUrl('auth/hybrid/connect', array('service'=>$accountNameLower));
+            $onChangeJS='openExtAccountWindow(\'' . $actionUrl . '\', \'' . $accountName . '\'); return false;';
         }
         
-        $onChangeJS='openExtAccountWindow(\'' . $actionUrl . '\', \'' . $accountName . '\'); return false;';
-            
         $checkBoxParams=array('label'=>Yii::t('userProfile', $accountName), 'checked'=>$isDisconnect, 'onChange'=>$onChangeJS);
         $formRender->checkboxField($checkBoxParams);
 
