@@ -27,7 +27,7 @@ class ExtAccounts extends CActiveRecord
 			array('provider_name', 'length', 'max'=>20),
 			array('service_user_email', 'length', 'max'=>255),
 			array('service_user_id', 'length', 'max'=>100),
-			array('user_id, provider_name, date_connected, connected, service_user_email, service_user_id, connected_manual', 'safe', 'on'=>'search'),
+			array('user_id, provider_name, date_connected, connected, service_user_email, service_user_id, connected_manually', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -55,7 +55,7 @@ class ExtAccounts extends CActiveRecord
 			'connected' => 'Connected',
 			'service_user_email' => 'Service User Email',
 			'service_user_id' => 'Service User',
-			'connected_manual' => 'Connected Manual',
+			'connected_manually' => 'Connected Manually',
 		);
 	}
 
@@ -84,7 +84,7 @@ class ExtAccounts extends CActiveRecord
 		$criteria->compare('connected',$this->connected);
 		$criteria->compare('service_user_email',$this->service_user_email,true);
 		$criteria->compare('service_user_id',$this->service_user_id,true);
-		$criteria->compare('connected_manual',$this->connected_manual);
+		$criteria->compare('connected_manually',$this->connected_manually);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
