@@ -49,6 +49,8 @@
         'Home page'=>'Go to main page',
         'Logout error'=>'Logout error',
         'Logout error'=>'Incorrect site logout',
-        
+         
+        'Invitation is not available'=>'Sorry, this invitation is not available',
+        'Invitation is available'=>'Thank you for using this invitation. You are welcome',
     );
 ?>

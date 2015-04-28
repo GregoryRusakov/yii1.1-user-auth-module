@@ -20,6 +20,12 @@
         $formRender=new FormElements($this, $model);
         $formRender->startForm();
         $formRender->showErrors();
+        
+        if (isset($inivtationGuid)){
+            $model->invitationGuid=$inivtationGuid;
+        }
+        $formRender->textField('invitationGuid', Yii::t('AuthModule.forms', 'Invitation'));
+        
         if (!$isNewRecord){
             $formRender->textFieldDisabled('username');
         }

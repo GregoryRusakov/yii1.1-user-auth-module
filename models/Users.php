@@ -21,6 +21,7 @@ class Users extends CActiveRecord{
     public $password_initial;
     public $verifyCode;
     public $termsSigned;
+    public $invitationGuid;
 
     /**
      * @return string the associated database table name
@@ -97,6 +98,7 @@ class Users extends CActiveRecord{
                     'verifyCode'=>Yii::t('AuthModule.forms','Verify code'),
                     'termsSigned'=>Yii::t('AuthModule.forms','Terms and conditions'),
                     'terms_version'=>Yii::t('AuthModule.forms','Terms and conditions'),
+                    'invitationGuid'=>Yii::t('AuthModule.forms','Invitation'),
                 
             );
     }

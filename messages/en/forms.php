@@ -80,5 +80,10 @@
         'Terms version'=>'Terms & condition version',
         'Terms and conditions'=>'Terms and conditions',
         'Please sign terms and conditions'=>'Please sign terms and conditions or deny registration',
+        
+        'Invitation'=>'Invitation',
+        'Invitations'=>'Invitations',
+        'RegisterMe'=>'Register me',    
+
     );
 ?>

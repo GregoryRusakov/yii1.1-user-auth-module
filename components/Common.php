@@ -42,8 +42,9 @@ class Common {
     public function sendPassRequestEmail($email, $guid){
 
         $siteName=Yii::app()->name;
-        $fullPageAddress=self::getParam('websiteHost').Yii::app()->createUrl('auth/user/passchange');
-        
+        //$fullPageAddress=self::getParam('websiteHost').Yii::app()->createUrl('auth/user/passchange');
+        $fullPageAddress=Yii::app()->getBaseUrl(true) . Yii::app()->createUrl('auth/user/passchange');
+                
         $headers=Common::createMailHeader();
                 
         $subject=Common::getTemplateValue('mail', 'restore_subject');
@@ -62,7 +63,8 @@ class Common {
         
     public function sendActivationtEmail($email, $guid){
         $siteName=Yii::app()->name;
-        $fullPageAddress=self::getParam('websiteHost').Yii::app()->createUrl('auth/user/activation');
+        //$fullPageAddress=self::getParam('websiteHost').Yii::app()->createUrl('auth/user/activation');
+        $fullPageAddress=Yii::app()->getBaseUrl(true) . Yii::app()->createUrl('auth/user/activation');
         
         $headers=Common::createMailHeader();
                 

@@ -147,6 +147,7 @@ class UserController extends Controller
         }
         else{
             //Yii::app()->user->setFlash('error', 'User not found while logout');
+            $this->redirect(array('user/registration'));
         }
                 
         Yii::app()->user->logout();
@@ -157,15 +158,27 @@ class UserController extends Controller
             
         $model=new Users;
         
+        $useInvitations=Common::getParam('useInvitations');
+        if ($useInvitations && empty($model->invitationGuid)){
+            //invitation is empty so we neet to show invitation enter page
+            $this->redirect(array('invitations/index'));
+        }
+
         if(isset($_POST['Users'])){
 
             //this is a second call this action but with form data,
             //so we need to update and save User model
 
             $model->attributes=$_POST['Users'];
-
+            
             if ($model->termsSigned>0){
                 $model->terms_version=1;
+            }
+            
+            if ($useInvitations){
+                //check if invitation is available
+                Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Invitation is not available'));
+                $this->redirect('invitations/index');
             }
                 
             if(!$model->validate()){
@@ -183,7 +196,7 @@ class UserController extends Controller
 
             $email=$model->email;
             $user_id=$model->id;
-
+           
             Yii::app()->user->setState('formUsername', $model->username);
 
             $guid=Common::getGUID();
