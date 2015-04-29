@@ -89,15 +89,18 @@ class Invitations extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('guid',$this->guid,true);
-		$criteria->compare('date_issued',$this->date_issued,true);
-		$criteria->compare('date_occuped',$this->date_occuped,true);
+		$criteria->compare('guid',$this->guid);
+		$criteria->compare('date_issued',$this->date_issued);
+		$criteria->compare('date_occuped',$this->date_occuped);
 		$criteria->compare('username_created',$this->username_created);
-		$criteria->compare('comments',$this->comments,true);
+                //$criteria->compare('used',$this->used);
+		$criteria->compare('comments',$this->comments);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+                        'sort'=>array('attributes'=>array('*')),
 		));
+   
 	}
 
 	/**
