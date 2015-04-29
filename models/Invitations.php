@@ -13,7 +13,10 @@
  */
 class Invitations extends CActiveRecord
 {
-    
+        const SHOW_ALL='all';
+        const SHOW_USED='used';
+        const SHOW_UNUSED='unused';
+        
         public $verifyCode;
     
 	/**
@@ -82,7 +85,7 @@ class Invitations extends CActiveRecord
 	 * @return CActiveDataProvider the data provider that can return the models
 	 * based on the search/filter conditions.
 	 */
-	public function search()
+	public function search($showMode=self::SHOW_ALL)
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -93,7 +96,15 @@ class Invitations extends CActiveRecord
 		$criteria->compare('date_issued',$this->date_issued);
 		$criteria->compare('date_occuped',$this->date_occuped);
 		$criteria->compare('username_created',$this->username_created);
-                //$criteria->compare('used',$this->used);
+                
+                switch ($showMode){
+                    case self::SHOW_USED:
+                        $criteria->compare('used',1);
+                        break;
+                    case self::SHOW_UNUSED:
+                        $criteria->compare('used',0);
+                        break;
+                }
 		$criteria->compare('comments',$this->comments);
 
 		return new CActiveDataProvider($this, array(
