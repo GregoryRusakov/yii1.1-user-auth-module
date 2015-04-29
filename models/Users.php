@@ -65,7 +65,8 @@ class Users extends CActiveRecord{
                     array('username', 'safe', 'except'=>'update'),
                     array('username', 'unsafe', 'on'=>'update'),
                     array('termsSigned', 'safe'),
-                                  
+                    array('invitationGuid', 'length', 'max'=>25),
+                    array('invitationGuid', 'safe'),
                     array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastLogin, serviceLogin'),
             );
     }

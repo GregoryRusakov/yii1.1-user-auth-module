@@ -52,5 +52,7 @@
          
         'Invitation is not available'=>'Sorry, this invitation is not available',
         'Invitation is available'=>'Thank you for using this invitation. You are welcome',
+        
+        'Invitation occupy error'=>'Invitation occupy error',
     );
 ?>

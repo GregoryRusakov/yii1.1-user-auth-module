@@ -16,8 +16,9 @@ class InvitationsController extends Controller
                     return;
                 }
                 //invitation ok, redirect to registration
-                Yii::app()->user->setFlash('info', Yii::t('AuthModule.main','Invitation ia available'));
-                $this->redirect(array('user/registration'), array('inivtationGuid'=>$model->guid));
+                Yii::app()->user->setFlash('info', Yii::t('AuthModule.main','Invitation is available'));
+                Yii::app()->user->setState('invitationGuid', $model->guid);
+                $this->redirect(array('user/registration'));
             }
             else{
                 //new form

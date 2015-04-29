@@ -35,6 +35,7 @@
         $formRender->textField('email', Yii::t('AuthModule.forms', 'User form. Email placeholder'));
         $formRender->textField('full_name', Yii::t('AuthModule.forms', 'User form. Fullname placeholder'));
         $formRender->passwordField('password_entered', Yii::t('AuthModule.forms', 'User form. Password placeholder'));
+        //$formRender->textField('password_entered', Yii::t('AuthModule.forms', 'User form. Password placeholder'));
         $formRender->capthaField('verifyCode');
         if ($isNewRecord){
             $termsUrl=Yii::app()->createUrl('site/page&view=terms');

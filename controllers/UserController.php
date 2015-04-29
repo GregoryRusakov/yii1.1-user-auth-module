@@ -159,9 +159,18 @@ class UserController extends Controller
         $model=new Users;
         
         $useInvitations=Common::getParam('useInvitations');
-        if ($useInvitations && empty($model->invitationGuid)){
-            //invitation is empty so we neet to show invitation enter page
-            $this->redirect(array('invitations/index'));
+        if ($useInvitations){
+            if (Yii::app()->user->hasState('invitationGuid')){
+                $invitationGuid=Yii::app()->user->getState('invitationGuid');
+            }
+            else{
+                $invitationGuid=null;
+            }
+            if (empty($invitationGuid)){
+                //invitation is empty so we neet to show invitation enter page
+                $this->redirect(array('invitations/index'));
+            }
+            $model->invitationGuid=$invitationGuid;
         }
 
         if(isset($_POST['Users'])){
@@ -175,14 +184,8 @@ class UserController extends Controller
                 $model->terms_version=1;
             }
             
-            if ($useInvitations){
-                //check if invitation is available
-                Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Invitation is not available'));
-                $this->redirect('invitations/index');
-            }
-                
             if(!$model->validate()){
-                //haven't passed validators
+                //have not pass validators
                 Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Incorrect form data'));
                 $this->render('change', array('model'=>$model));
                 return;
@@ -194,6 +197,14 @@ class UserController extends Controller
                 return;
             }
 
+            if ($useInvitations){
+                //mark invintation used
+                if (!Invitations::setUsed($model->invitationGuid, $model->username)){
+                    Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Invitation occupy error'));
+                    $this->redirect(array('invitations/index'));
+                }
+            }
+            
             $email=$model->email;
             $user_id=$model->id;
            

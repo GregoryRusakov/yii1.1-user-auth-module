@@ -18,7 +18,7 @@ class Invitations extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'invitations';
+		return 'auth_invitations';
 	}
 
 	/**
@@ -30,10 +30,10 @@ class Invitations extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('guid', 'required'),
-                        array('date_issued', 'required', 'on'=>'insert'),
-                        array('date_occuped', 'required', 'on'=>'registration'),
-			array('username_created', 'numerical', 'integerOnly'=>true),
-			array('guid', 'length', 'max'=>32),
+                        array('date_issued', 'required', 'on'=>'generation'),
+                        array('date_occuped, used', 'required', 'on'=>'use'),
+			array('username_created', 'length', 'max'=>100),
+			array('guid', 'length', 'max'=>25),
 			array('comments', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -115,13 +115,48 @@ class Invitations extends CActiveRecord
             $criteria=new CDbCriteria;
             $criteria->select='*';
             $criteria->addCondition('guid=:param1');
-            $criteria->addCondition('date_occuped=:param2');
-            $criteria->params=array(':param1'=>$guid, ':param2'=>null);
+            $criteria->addCondition('used=:param2');
+            $criteria->params=array(':param1'=>$guid, ':param2'=>false);
             $criteria->limit = 1;
 
             $invitation=self::model()->find($criteria);
             
-            return $invitation;
+            return ($invitation!=null);
+        }
+        
+        public function saveModel(){
+            
+            $dt = new DateTime();
+            $curDate=$dt->format(Helpers::getAppParam('dateFormat'));                   
+            
+            if ($this->scenario=='generate'){
+                $this->date_issued=$curDate;
+            }
+            elseif ($this->scenario=='use'){
+                $this->date_occuped=$curDate;
+            }
+                        
+            if(!$this->save()){
+                return false;
+            }
+
+            return true;
+        }
+        
+        public static function setUsed($guid, $username){
+            $invitation=self::model()->findByAttributes(array('guid'=>$guid));
+            if ($invitation==null){
+                return false;
+            }
+            $invitation->scenario='use';
+            $invitation->username_created=$username;
+            $invitation->used=true;
+            
+            if (!$invitation->saveModel()){
+                return false;
+            }
+            
+            return true;
         }
 
 }
