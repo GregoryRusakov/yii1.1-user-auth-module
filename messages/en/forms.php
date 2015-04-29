@@ -84,6 +84,11 @@
         'Invitation'=>'Invitation',
         'Invitations'=>'Invitations',
         'RegisterMe'=>'Register me',    
+        'Date issued'=>'Date issued',
+        'Date occuped'=>'Date occuped',
+        'Created username'=>'Created username',
+        'Used'=>'Used',
+        
 
     );
 ?>

@@ -64,11 +64,12 @@ class Invitations extends CActiveRecord
 	{
 		return array(
 			'guid' => Yii::t('AuthModule.forms', 'Invitation'),
-			'date_issued' => 'Date Issued',
-			'date_occuped' => 'Date Occuped',
-			'username_created' => 'Username Created',
-			'comments' => 'Comments',
-                        'id' => 'ID',
+			'date_issued' => Yii::t('AuthModule.forms', 'Date issued'),
+                        'Used'=>Yii::t('AuthModule.forms', 'Used'),
+                        'date_occuped' => Yii::t('AuthModule.forms', 'Date occuped'),
+			'username_created' => Yii::t('AuthModule.forms', 'Created username'),
+			'comments' => Yii::t('AuthModule.forms', 'Comments'),
+                        'id' => Yii::t('AuthModule.forms', 'ID'),
 
 		);
 	}
