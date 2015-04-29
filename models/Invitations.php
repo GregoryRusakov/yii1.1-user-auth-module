@@ -13,6 +13,9 @@
  */
 class Invitations extends CActiveRecord
 {
+    
+        public $verifyCode;
+    
 	/**
 	 * @return string the associated database table name
 	 */
@@ -35,9 +38,8 @@ class Invitations extends CActiveRecord
 			array('username_created', 'length', 'max'=>100),
 			array('guid', 'length', 'max'=>25),
 			array('comments', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			array('guid, date_issued, date_occuped, username_created, comments', 'safe', 'on'=>'search'),
+                        array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'generation, use'),
 		);
 	}
 

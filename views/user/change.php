@@ -21,21 +21,23 @@
         $formRender->startForm();
         $formRender->showErrors();
         
-        if (isset($inivtationGuid)){
-            $model->invitationGuid=$inivtationGuid;
-        }
-        $formRender->textField('invitationGuid', Yii::t('AuthModule.forms', 'Invitation'));
-        
-        if (!$isNewRecord){
-            $formRender->textFieldDisabled('username');
+        if ($isNewRecord){
+            $formRender->textField('username', Yii::t('AuthModule.forms', 'Registration form. Username placeholder'));
+            if (isset($inivtationGuid)){
+                $model->invitationGuid=$inivtationGuid;
+                //$formRender->textField('invitationGuid', Yii::t('AuthModule.forms', 'Invitation'));
+                $formRender->from->hiddenField($model, 'invitationGuid');
+            }
         }
         else{
-            $formRender->textField('username', Yii::t('AuthModule.forms', 'Registration form. Username placeholder'));
+            $formRender->textFieldDisabled('username');
         }
         $formRender->textField('email', Yii::t('AuthModule.forms', 'User form. Email placeholder'));
         $formRender->textField('full_name', Yii::t('AuthModule.forms', 'User form. Fullname placeholder'));
+        
         $formRender->passwordField('password_entered', Yii::t('AuthModule.forms', 'User form. Password placeholder'));
         //$formRender->textField('password_entered', Yii::t('AuthModule.forms', 'User form. Password placeholder'));
+        
         $formRender->capthaField('verifyCode');
         if ($isNewRecord){
             $termsUrl=Yii::app()->createUrl('site/page&view=terms');

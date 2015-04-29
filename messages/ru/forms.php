@@ -79,7 +79,7 @@
     
         'Terms version'=>'Версия Соглашения',
         'Terms and conditions'=>'Пользовательское Соглашение',
-        'Please sign terms and conditions'=>'Пожалуйста подпишите Соглашение или откажитель от регистрации',
+        'Please sign terms and conditions'=>'Пожалуйста подпишите Соглашение или откажитесь от регистрации',
         
         'Invitation'=>'Приглашение',
         'Invitations'=>'Приглашения',

@@ -12,8 +12,9 @@ class InvitationsController extends Controller
                 $isAvailable=Invitations::model()->checkAvaliable($model->guid);
                 if (!$isAvailable){
                     Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Invitation is not available'));
-                    $this->render('index', array('model'=>$model));
+                    $this->renderIndex($model);
                     return;
+                    
                 }
                 //invitation ok, redirect to registration
                 Yii::app()->user->setFlash('info', Yii::t('AuthModule.main','Invitation is available'));
@@ -23,11 +24,29 @@ class InvitationsController extends Controller
             else{
                 //new form
                 $model=new Invitations;
-		$this->render('index', array('model'=>$model));
+                $this->renderIndex($model);
+                return;
             }
 	}
 
-	// Uncomment the following methods and override them if needed
+        public function renderIndex($model){
+            
+            $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
+            
+            if ($maxAttemptsBeforeCaptha!=0){
+                $loginAtteptsInSession=(int)Yii::app()->session['loginAtteptsInSession'];
+
+                if ($loginAtteptsInSession>$maxAttemptsBeforeCaptha) { 
+                    $model->scenario = 'withCaptcha';
+                }   
+
+                Yii::app()->session['loginAtteptsInSession']=++$loginAtteptsInSession;
+
+            }                           
+            $this->render('index', array('model'=>$model));    
+        }
+        
+        // Uncomment the following methods and override them if needed
 	/*
 	public function filters()
 	{
@@ -40,17 +59,21 @@ class InvitationsController extends Controller
 			),
 		);
 	}
-
-	public function actions()
+        */
+	
+        public function actions()
 	{
 		// return external action classes, e.g.:
-		return array(
-			'action1'=>'path.to.ActionClass',
-			'action2'=>array(
-				'class'=>'path.to.AnotherActionClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
+            return array(
+                // captcha action renders the CAPTCHA image displayed on the contact page
+                'captcha'=>array(
+                    'class'=>'CCaptchaAction',
+                    'maxLength'=> 4,
+                    'minLength'=> 4,
+                    'testLimit'=>3,
+                    'backColor'=>0xFFFFFF,
+                ),        
+            );
 	}
-	*/
+
 }

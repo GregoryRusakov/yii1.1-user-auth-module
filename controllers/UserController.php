@@ -42,7 +42,6 @@ class UserController extends Controller
                 }   
 
                 Yii::app()->session['loginAtteptsInSession']=++$loginAtteptsInSession;
-                
             }                  
             
             $this->performAjaxValidation($formLogin);          
@@ -203,6 +202,7 @@ class UserController extends Controller
                     Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Invitation occupy error'));
                     $this->redirect(array('invitations/index'));
                 }
+                Yii::app()->user->setState('invitationGuid', null);
             }
             
             $email=$model->email;

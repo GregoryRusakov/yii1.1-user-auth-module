@@ -14,7 +14,11 @@
         $formRender->startForm();
         $formRender->showErrors();
         $formRender->textField('guid');
-
+        
+        if ($model->scenario=='withCaptcha'){
+            $formRender->capthaField('verifyCode');
+        }
+        
         $formRender->submitButton(Yii::t('AuthModule.forms', 'RegisterMe'));
 
         $formRender->endForm();
