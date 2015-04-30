@@ -50,7 +50,7 @@
         'Logout error'=>'Logout error',
         'Logout error'=>'Incorrect site logout',
          
-        'Invitation is not available'=>'Sorry, this invitation is not available',
+        'Invitation is not available'=>'Sorry, this invitation not correct or no more available',
         'Invitation is available'=>'Thank you for using this invitation. You are welcome',
         
         'Invitation occupy error'=>'Invitation occupy error',

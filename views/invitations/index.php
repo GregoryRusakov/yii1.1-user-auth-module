@@ -1,7 +1,17 @@
 <?php
     $this->pageTitle="Введите приглашение";
 ?>
+<p>
+В данное время регистрация новых пользователей производится по приглашениям (кодам).
+</p>
+<p>Если у вас нет приглашения, то его можно запросить, написав письмо на адрес:
+    <?php 
+        $email=Common::getParam('adminEmail');
+        echo CHtml::mailto($email, $email); 
+    ?>
+</p>
 
+<div class="margin-bottom-30"></div>
 <div class="row">
     <div class="table-responsive col-md-5">
     <?php
@@ -13,7 +23,7 @@
 
         $formRender->startForm();
         $formRender->showErrors();
-        $formRender->textField('guid');
+        $formRender->textField('guid','','',false);
         
         if ($model->scenario=='withCaptcha'){
             $formRender->capthaField('verifyCode');
@@ -24,19 +34,7 @@
         $formRender->endForm();
 
     ?>
-
-
     </div>
 
 </div>
 
-<div>
-    
-    <p>Если у вас нет приглашения, то его можно запросить, написав письмо на адрес:
-    <?php 
-        $email=Common::getParam('adminEmail');
-        echo CHtml::mailto($email, $email); 
-    ?>
-</p>
-    
-</div>
