@@ -11,8 +11,6 @@
  */
 
     return array(
-        
-        //'websiteHost'=>'http://localhost/trader-news.ru',
         'attemptsBeforeCaptcha'=>2,
         'cookieBasedLoginDays'=>5,
         'userBlockMaxLoginAttempts'=>50,
@@ -25,6 +23,5 @@
         'profilePage'=>array('user/index'),
         'defaultController'=>'user/login',
         'useInvitations'=>true,
-
     );
      
