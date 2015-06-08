@@ -54,5 +54,7 @@
         'Invitation is available'=>'Thank you for using this invitation. You are welcome',
         
         'Invitation occupy error'=>'Invitation occupy error',
+        
+        'Invalid characters in username'=>'Invalid characters in username (only 2-25 alphanumeric and _.- chars allowed)',
     );
 ?>

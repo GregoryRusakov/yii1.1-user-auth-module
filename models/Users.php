@@ -66,6 +66,8 @@ class Users extends CActiveRecord{
                     array('invitationGuid', 'length', 'max'=>25),
                     array('invitationGuid', 'safe'),
                     array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastLogin, serviceLogin'),
+                
+                    array('username','match', 'not' => true, 'pattern' => '/^[a-z0-9._-]{2,25}$/','message' => Yii::t('AuthModule.main','Invalid characters in username')),
             );
     }
 
@@ -98,7 +100,6 @@ class Users extends CActiveRecord{
                     'termsSigned'=>Yii::t('AuthModule.forms','Terms and conditions'),
                     'terms_version'=>Yii::t('AuthModule.forms','Terms and conditions'),
                     'invitationGuid'=>Yii::t('AuthModule.forms','Invitation'),
-                
             );
     }
 

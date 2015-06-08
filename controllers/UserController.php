@@ -31,7 +31,7 @@ class UserController extends Controller
         if(isset($_POST['LoginForm'])){
 
             $formLogin->attributes=$_POST['LoginForm'];
-            
+                        
             // validate user input and redirect to the previous page if valid
             $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
             if ($maxAttemptsBeforeCaptha!=0){
@@ -57,6 +57,16 @@ class UserController extends Controller
                 $this->render('login', array('model'=>$formLogin));
                 return;   
             }            
+            
+            //if we have an email as username, then find username by email in database
+            $email=$formLogin->username;
+            $user=Users::model()->getByEmail($email);
+            if ($user!=null){
+                $username=$user->username;
+                $formLogin->username=$username;
+                $modelName=CHtml::modelName($formLogin);
+                $_POST[$modelName]['username']=$username;
+            }
             
             $validated=$formLogin->validate();
             $loggedIn=($validated && $formLogin->login());
@@ -230,7 +240,7 @@ class UserController extends Controller
                 $this->redirect(array('user/registration'));
             }
 
-            if (Common::sendActivationtEmail($model->email, $guid)){
+            if (Common::sendActivationtEmail($model->email, $guid, $model->username)){
                 Yii::app()->user->setFlash('success', sprintf(Yii::t('AuthModule.main','Activation email has been sent to address'), $email));
                 $this->redirect(array('user/activation'));
             }
@@ -387,7 +397,7 @@ class UserController extends Controller
                 return;
             }
 
-            $result=Common::sendPassRequestEmail($email, $guid);
+            $result=Common::sendPassRequestEmail($email, $guid, $user->username);
 
             if ($result) {
                 Yii::app()->user->setFlash('success', sprintf(Yii::t('AuthModule.main','Password restore link has been sent'), $email));
@@ -529,6 +539,19 @@ class UserController extends Controller
             
             if(isset($_POST['ajax']) && $_POST['ajax']==='user-login'){
 
+                //if we have an email as username, then find username by email in database
+                if (strpos($model->username, '@', 1)!==false){
+                    //this is an email so 
+                    $email=$model->username;
+                    $user=Users::model()->getByEmail($email);
+                    if ($user!=null){
+                        $username=$user->username;
+                        $model->username=$username;
+                        $modelName=CHtml::modelName($model);
+                        $_POST[$modelName]['username']=$username;
+                    }
+                }
+
                 $response=CActiveForm::validate($model);
                 $responseArray=CJSON::decode($response);
 
@@ -539,7 +562,6 @@ class UserController extends Controller
                             $flashError.=$message . '<br>';
                         }
                     }
-                    //$flashError=Yii::app()->user->getFlash('error'); 
                     $flashArray=array('status'=>'error', 'message'=>$flashError);
                     $responseArray=array_merge($responseArray, $flashArray);
                 }

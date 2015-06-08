@@ -11,7 +11,7 @@
 
 return array(
     'restore_subject'=>'Password restore message %s',
-    'restore_text'=>'Please click on the following link to restore your %s password<br><br>
+    'restore_text'=>'Please click on the following link to restore your %s (%s) password<br><br>
              <a href="%s">Restore password</a>
              <br><br>
              Or enter your restore code<br><br>
@@ -22,7 +22,7 @@ return array(
     
     
     'activation_subject'=>'Please confirm your registration %s',
-    'activation_text'=>'Thank you for the registration on %s1<br><br>
+    'activation_text'=>'Thank you for the registration on %s (%s)<br><br>
              Please click on the following link to confirm your registration<br><br>
              <a href="%s">Confirm registration</a>
              <br><br>

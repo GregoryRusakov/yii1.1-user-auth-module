@@ -39,11 +39,10 @@ class Common {
         return $guid;
     }
     
-    public function sendPassRequestEmail($email, $guid){
+    public function sendPassRequestEmail($email, $guid, $username){
 
         $siteName=Yii::app()->name;
-        //$fullPageAddress=self::getParam('websiteHost').Yii::app()->createUrl('auth/user/passchange');
-        $fullPageAddress=Yii::app()->getBaseUrl(true) . Yii::app()->createUrl('auth/user/passchange');
+        $fullPageAddress=Yii::app()->createAbsoluteUrl('auth/user/passchange');
                 
         $headers=Common::createMailHeader();
                 
@@ -53,7 +52,7 @@ class Common {
         $text=Common::getTemplateValue('mail', 'restore_text');
 
         $restoreLink=$fullPageAddress."&guid=$guid";
-        $text=sprintf($text, $siteName, $restoreLink, $guid, $fullPageAddress);
+        $text=sprintf($text, $siteName, $username, $restoreLink, $guid, $fullPageAddress);
         
         $subject='=?UTF-8?B?'.base64_encode($subject).'?=';
         $body=$text;
@@ -61,10 +60,9 @@ class Common {
         return mail($email,$subject,$body,$headers);
     }
         
-    public function sendActivationtEmail($email, $guid){
+    public function sendActivationtEmail($email, $guid, $username){
         $siteName=Yii::app()->name;
-        //$fullPageAddress=self::getParam('websiteHost').Yii::app()->createUrl('auth/user/activation');
-        $fullPageAddress=Yii::app()->getBaseUrl(true) . Yii::app()->createUrl('auth/user/activation');
+        $fullPageAddress=Yii::app()->createAbsoluteUrl('auth/user/activation');
         
         $headers=Common::createMailHeader();
                 
@@ -74,7 +72,7 @@ class Common {
         $text=Common::getTemplateValue('mail', 'activation_text');
         $restoreLink=$fullPageAddress."&guid=$guid";
         
-        $text=sprintf($text, $siteName, $restoreLink, $guid, $fullPageAddress);
+        $text=sprintf($text, $siteName, $username, $restoreLink, $guid, $fullPageAddress);
         
         $subject='=?UTF-8?B?'.base64_encode($subject).'?=';
         $body=$text;
