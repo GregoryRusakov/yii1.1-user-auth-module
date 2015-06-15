@@ -12,10 +12,10 @@
 
     return array(
         'attemptsBeforeCaptcha'=>2,
-        'cookieBasedLoginDays'=>5,
-        'userBlockMaxLoginAttempts'=>50,
+        'cookieBasedLoginDays'=>14,
+        'userBlockMaxLoginAttempts'=>5,
         'userBlockTimeMinutes'=>30,
-        'ipBlockMaxLoginAttempts'=>70,
+        'ipBlockMaxLoginAttempts'=>5,
         'ipBlockTimeMinutes'=>30,              
         'dateFormat'=>'Y-m-d H:i:s',              
         'timeZoneLabel'=>'МСК',     

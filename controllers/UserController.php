@@ -339,7 +339,6 @@ class UserController extends Controller
         }
         else{
             //requst form has been filled
-
             $requestForm=new PassRequestForm;
             $requestForm->attributes=$_POST['PassRequestForm'];
             
@@ -350,7 +349,6 @@ class UserController extends Controller
             }
 
             //for is correct so, prepare and send request email
-            
             $email=$_POST['PassRequestForm']['email'];
 
             //create new guid and sent it to user
