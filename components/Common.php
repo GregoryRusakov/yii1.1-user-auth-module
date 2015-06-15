@@ -81,10 +81,10 @@ class Common {
      
     }
     
-    function createMailHeader($fromEmail='', $fromName=''){
+    function createMailHeader($fromName='', $fromEmail=''){
         
         if (empty($fromEmail)){
-            $fromEmail=self::getParam('adminEmail');
+            $fromEmail=self::getParam('fromEmail');
         }
                 
         if (empty($fromName)){

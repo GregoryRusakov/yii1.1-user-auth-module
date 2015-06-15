@@ -6,7 +6,11 @@
 </p>
 <p>Если у вас нет приглашения, то его можно запросить, написав письмо на адрес:
     <?php 
-        $email=Common::getParam('adminEmail');
+        try{
+            $email=Helpers::getAppParam('adminEmail');
+        } catch (Exception $ex) {
+            $email=Common::getParam('adminEmail');
+        }
         echo CHtml::mailto($email, $email); 
     ?>
 </p>
