@@ -17,6 +17,44 @@ class Common {
         return $value;
     }
 
+    public function generateLicenceKey(){
+        $key=self::generateKey();
+        $i=0; $iMax=100;
+        $model=Users::model()->getByLicenceKey($key);
+        
+        while ($model!=null){
+            $key=self::generateKey();
+            $model=Users::model()->getByLicenceKey($key);
+            $i++;
+            if ($i>=$iMax){
+                Yii::log('Cannot generate licence key. ' . $iMax . ' attempts tried.', CLogger::LEVEL_ERROR, 'user');
+                return '';
+            }
+        }
+        
+        return $key;
+    
+    }
+    
+    private function generateKey(){
+        
+        $prefix='tn';
+        $data=openssl_random_pseudo_bytes(16);
+
+        assert(strlen($data) == 16);
+
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+
+        //return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+        $dataString=vsprintf('%s-%s%s-%s', str_split(bin2hex($data), 4));
+        $key=$prefix . '-' . $dataString;
+                
+        return $key;
+            
+    }
+
+        
     public function getGUID(){
         if (function_exists('com_create_guid')){
             $guid=com_create_guid();

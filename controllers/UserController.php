@@ -286,6 +286,8 @@ class UserController extends Controller
                 return;
             }
 
+            $licenceKey=Common::generateLicenceKey();
+            $modelUser->licence_key=$licenceKey;
             $modelUser->activated=true;
             $modelUser->setScenario('activation');
 
@@ -585,4 +587,11 @@ class UserController extends Controller
             }
 
     }
+    
+    public function actionAjaxGenerateKey(){
+
+       $key=Common::generateLicenceKey();
+       echo $key;
+   }
+        
 }
