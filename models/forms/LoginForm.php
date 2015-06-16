@@ -78,7 +78,7 @@ class LoginForm extends CFormModel
                 
 		if($this->_identity->errorCode===UserIdentity::ERROR_NONE)
 		{
-                        $days=Common::getParam('cookieBasedLoginDays');
+                        $days=AuthCommon::getParam('cookieBasedLoginDays');
                         if (empty($days)){
                             $days=14;                            
                         }

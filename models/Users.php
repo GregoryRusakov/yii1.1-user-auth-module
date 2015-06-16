@@ -161,8 +161,8 @@ class Users extends CActiveRecord{
                 $hash=password_hash($this->password_entered, PASSWORD_BCRYPT, array('cost' => 10));
                 $this->password_hash = $hash;
                 $dt = new DateTime();
-                $this->date_reg=$dt->format(Common::getParam('dateFormat'));                   
-                $ip=Common::getUserIp();
+                $this->date_reg=$dt->format(AuthCommon::getParam('dateFormat'));                   
+                $ip=AuthCommon::getUserIp();
                 $this->ip_endorsed=$ip;
 
             }

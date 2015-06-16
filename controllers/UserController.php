@@ -33,7 +33,7 @@ class UserController extends Controller
             $formLogin->attributes=$_POST['LoginForm'];
                         
             // validate user input and redirect to the previous page if valid
-            $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
+            $maxAttemptsBeforeCaptha=(int)AuthCommon::getParam('attemptsBeforeCaptcha');
             if ($maxAttemptsBeforeCaptha!=0){
                 $loginAtteptsInSession=(int)Yii::app()->session['loginAtteptsInSession'];
 
@@ -97,7 +97,7 @@ class UserController extends Controller
                     }
                     if ($loggedUserPage==null){
                         //go to profile page
-                        $loggedUserPage=Common::getParam('profilePage');   
+                        $loggedUserPage=AuthCommon::getParam('profilePage');   
                     }
                     Yii::app()->user->setState('openPageAfterLogin', null);
                     $this->redirect($loggedUserPage);
@@ -114,7 +114,7 @@ class UserController extends Controller
         }
 
         //check if we need captha field
-        $maxAttemptsBeforeCaptha=Common::getParam('attemptsBeforeCaptcha');
+        $maxAttemptsBeforeCaptha=AuthCommon::getParam('attemptsBeforeCaptcha');
         $loginAtteptsInSession=(int)Yii::app()->session['loginAtteptsInSession'];
         if ($loginAtteptsInSession>$maxAttemptsBeforeCaptha) { 
             $formLogin->scenario = 'withCaptcha';
@@ -143,7 +143,7 @@ class UserController extends Controller
             $title=Yii::t('AuthModule.main','Logout error');
             $message=Yii::t('AuthModule.main','Incorrect site logout');
 
-            Common::showError($message, $title);
+            AuthCommon::showError($message, $title);
             return;
 
         }
@@ -167,7 +167,7 @@ class UserController extends Controller
             
         $model=new Users;
         
-        $useInvitations=Common::getParam('useInvitations');
+        $useInvitations=AuthCommon::getParam('useInvitations');
         if ($useInvitations){
             if (Yii::app()->user->hasState('invitationGuid')){
                 $invitationGuid=Yii::app()->user->getState('invitationGuid');
@@ -220,7 +220,7 @@ class UserController extends Controller
            
             Yii::app()->user->setState('formUsername', $model->username);
 
-            $guid=Common::getGUID();
+            $guid=AuthCommon::getGUID();
 
             $validations=new Validations;
             $validations->guid=$guid;
@@ -230,7 +230,7 @@ class UserController extends Controller
 
             $date = new DateTime();
             $date->modify("+24 hours");
-            $exp_time=$date->format(Common::getParam('dateFormat'));
+            $exp_time=$date->format(AuthCommon::getParam('dateFormat'));
 
             $validations->exp_datetime=$exp_time;
             $validations->comments='Activate new user';
@@ -240,7 +240,7 @@ class UserController extends Controller
                 $this->redirect(array('user/registration'));
             }
 
-            if (Common::sendActivationtEmail($model->email, $guid, $model->username)){
+            if (AuthCommon::sendActivationtEmail($model->email, $guid, $model->username)){
                 Yii::app()->user->setFlash('success', sprintf(Yii::t('AuthModule.main','Activation email has been sent to address'), $email));
                 $this->redirect(array('user/activation'));
             }
@@ -286,7 +286,7 @@ class UserController extends Controller
                 return;
             }
 
-            $licenceKey=Common::generateLicenceKey();
+            $licenceKey=AuthCommon::generateLicenceKey();
             $modelUser->licence_key=$licenceKey;
             $modelUser->activated=true;
             $modelUser->setScenario('activation');
@@ -354,7 +354,7 @@ class UserController extends Controller
             $email=$_POST['PassRequestForm']['email'];
 
             //create new guid and sent it to user
-            $guid=Common::getGUID();
+            $guid=AuthCommon::getGUID();
 
             $userModel=new Users;
             $user=$userModel->getByEmail($email);
@@ -373,7 +373,7 @@ class UserController extends Controller
 
             $date = new DateTime();
             $date->modify("+24 hours");
-            $exp_time=$date->format(Common::getParam('dateFormat'));
+            $exp_time=$date->format(AuthCommon::getParam('dateFormat'));
 
             $validations->exp_datetime=$exp_time;
             $validations->comments='Restore user password';
@@ -397,7 +397,7 @@ class UserController extends Controller
                 return;
             }
 
-            $result=Common::sendPassRequestEmail($email, $guid, $user->username);
+            $result=AuthCommon::sendPassRequestEmail($email, $guid, $user->username);
 
             if ($result) {
                 Yii::app()->user->setFlash('success', sprintf(Yii::t('AuthModule.main','Password restore link has been sent'), $email));
@@ -568,7 +568,7 @@ class UserController extends Controller
 
                 if ($response!='[]'){
                     //some errors, so we stop next processing and print post data
-                    $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
+                    $maxAttemptsBeforeCaptha=(int)AuthCommon::getParam('attemptsBeforeCaptcha');
                     if ($maxAttemptsBeforeCaptha!=0){
                         $loginAtteptsInSession=(int)Yii::app()->session['loginAtteptsInSession'];
                         if ($loginAtteptsInSession>$maxAttemptsBeforeCaptha){
@@ -590,7 +590,7 @@ class UserController extends Controller
     
     public function actionAjaxGenerateKey(){
 
-       $key=Common::generateLicenceKey();
+       $key=AuthCommon::generateLicenceKey();
        echo $key;
    }
         

@@ -10,7 +10,7 @@
  * http://gregoryrusakov.github.io/yii1.1-auth-module/
  */
 
-class Common {
+class AuthCommon {
     
     public function getParam($paramName){
         $value=Yii::app()->controller->module->{$paramName};
@@ -82,12 +82,12 @@ class Common {
         $siteName=Yii::app()->name;
         $fullPageAddress=Yii::app()->createAbsoluteUrl('auth/user/passchange');
                 
-        $headers=Common::createMailHeader();
+        $headers=AuthCommon::createMailHeader();
                 
-        $subject=Common::getTemplateValue('mail', 'restore_subject');
+        $subject=AuthCommon::getTemplateValue('mail', 'restore_subject');
         $subject=sprintf($subject, $siteName);
         
-        $text=Common::getTemplateValue('mail', 'restore_text');
+        $text=AuthCommon::getTemplateValue('mail', 'restore_text');
 
         $restoreLink=$fullPageAddress."&guid=$guid";
         $text=sprintf($text, $siteName, $username, $restoreLink, $guid, $fullPageAddress);
@@ -102,12 +102,12 @@ class Common {
         $siteName=Yii::app()->name;
         $fullPageAddress=Yii::app()->createAbsoluteUrl('auth/user/activation');
         
-        $headers=Common::createMailHeader();
+        $headers=AuthCommon::createMailHeader();
                 
-        $subject=Common::getTemplateValue('mail', 'activation_subject');
+        $subject=AuthCommon::getTemplateValue('mail', 'activation_subject');
         $subject=sprintf($subject, $siteName);
         
-        $text=Common::getTemplateValue('mail', 'activation_text');
+        $text=AuthCommon::getTemplateValue('mail', 'activation_text');
         $restoreLink=$fullPageAddress."&guid=$guid";
         
         $text=sprintf($text, $siteName, $username, $restoreLink, $guid, $fullPageAddress);

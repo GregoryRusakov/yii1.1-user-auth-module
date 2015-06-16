@@ -65,15 +65,15 @@
     }
     echo '<span class="col-sm-2 align-right">'.$socialLoginLabel.'</span>';
     
-    Common::renderExtAccountWindowJS();
+    AuthCommon::renderExtAccountWindowJS();
     
-    Common::renderSocialLogin('facebook');
+    AuthCommon::renderSocialLogin('facebook');
 
     echo '<span class="margin-right-mid"></span>';
-    Common::renderSocialLogin('google');
+    AuthCommon::renderSocialLogin('google');
 
     echo '<span class="margin-right-mid"></span>';
-    Common::renderSocialLogin('vkontakte');
+    AuthCommon::renderSocialLogin('vkontakte');
     
 ?>
 </div>

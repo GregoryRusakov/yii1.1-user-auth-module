@@ -69,7 +69,7 @@ class HybridController extends Controller
             $errorMessage=$ex->getMessage();
             Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
             Yii::app()->user->setFlash('warning', 'Подключение учетной записи ' . $serviceName . ' не было выполнено.');
-            Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
+            AuthCommon::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
             exit();
         }
         
@@ -78,12 +78,12 @@ class HybridController extends Controller
             
         }catch (Exception $ex){
             Yii::log($ex->getMessage(), 'error', 'Connecting accout ' . $serviceName);
-            Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
+            AuthCommon::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
             exit();
         }
       
         Yii::app()->user->setFlash('info', 'Учетная запись ' . $serviceName . ' подключена.');
-        Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['successLoginPage']));
+        AuthCommon::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['successLoginPage']));
     }
     
     public function actionLogin($service){
@@ -108,7 +108,7 @@ class HybridController extends Controller
             Yii::log($errorMessage, CLogger::LEVEL_WARNING, 'hybridAuth');
             Yii::app()->user->setFlash('warning', 'Вход с учетной записью ' . $serviceName . ' не был выполнен.');
 
-            Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
+            AuthCommon::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['errorLoginPage']));
             exit();
             
         }
@@ -119,7 +119,7 @@ class HybridController extends Controller
             $errorMessage=$ex->getMessage();
             Yii::log($errorMessage, 'error', 'Login with account' . $service);
             Yii::app()->user->setFlash('error', $errorMessage);
-            Common::renderExternalLoginCloseJS(Yii::app()->createUrl(''));
+            AuthCommon::renderExternalLoginCloseJS(Yii::app()->createUrl(''));
             exit();
         }
         
@@ -138,7 +138,7 @@ class HybridController extends Controller
             exit();
         }        
 
-        Common::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['successLoginPage']));
+        AuthCommon::renderExternalLoginCloseJS(Yii::app()->createUrl(Yii::app()->params['successLoginPage']));
     }
     
     private function connectServiceProfile($serviceProfile, $service){
@@ -161,7 +161,7 @@ class HybridController extends Controller
         if (!$ExtAccount->connected || $ExtAccount->date_connected==null){
             $ExtAccount->connected=true;
             $dt = new DateTime();
-            $currentDateString=$dt->format(Common::getParam('dateFormat'));    
+            $currentDateString=$dt->format(AuthCommon::getParam('dateFormat'));    
             $ExtAccount->date_connected=$currentDateString;
             $ExtAccount->connected_manually=true;
             $ExtAccount->service_user_email=$serviceUserEmail;
@@ -194,7 +194,7 @@ class HybridController extends Controller
         }        
         
         $dt = new DateTime();
-        $currentDateString=$dt->format(Common::getParam('dateFormat'));                
+        $currentDateString=$dt->format(AuthCommon::getParam('dateFormat'));                
         
         $ExtAccount=ExtAccounts::model()->getUserByServiceIndentifier($service, $serviceUserId);
         if ($ExtAccount==null){
@@ -227,7 +227,7 @@ class HybridController extends Controller
             $siteUser->created_manually=false;
             $siteUser->date_reg=$currentDateString;
             $siteUser->activated=true; //do not need activation by email
-            $siteUser->ip_endorsed=Common::getUserIp();
+            $siteUser->ip_endorsed=AuthCommon::getUserIp();
             $userContemporary=new UsersComplementary;
         }
         else{

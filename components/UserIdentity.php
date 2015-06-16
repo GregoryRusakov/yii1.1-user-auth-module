@@ -28,10 +28,10 @@ class UserIdentity extends CUserIdentity
 	public function authenticate($isServiceLogin=false)
 	{
             
-            $ip=Common::getUserIp();
+            $ip=AuthCommon::getUserIp();
             
-            $timeZoneLabel=Common::getParam('timeZoneLabel');
-            $dateFormat=Common::getParam('dateFormat');
+            $timeZoneLabel=AuthCommon::getParam('timeZoneLabel');
+            $dateFormat=AuthCommon::getParam('dateFormat');
             
             if (!empty($ip)){
                 $result=$this->checkIpBlocked($ip);
@@ -146,19 +146,19 @@ class UserIdentity extends CUserIdentity
             $unsafeUser->attempts_total++;
             $unsafeUser->comments="user: ".$userModel->username;
             
-            $maxAttempts=Common::getParam('userBlockMaxLoginAttempts');
+            $maxAttempts=AuthCommon::getParam('userBlockMaxLoginAttempts');
             
             if ($maxAttempts>0){
                 if ($unsafeUser->attempts<$maxAttempts){
                     $unsafeUser->blocked_until=null;
                 }    
                 else{
-                    $userBlockTimeMinutes=Common::getParam('userBlockTimeMinutes');
+                    $userBlockTimeMinutes=AuthCommon::getParam('userBlockTimeMinutes');
                     if ($userBlockTimeMinutes>0){
                         //block user
                         $dt = new DateTime();
                         $dt->add(new DateInterval('PT' . $userBlockTimeMinutes . 'M'));
-                        $unsafeUser->blocked_until=$dt->format(Common::getParam('dateFormat'));     
+                        $unsafeUser->blocked_until=$dt->format(AuthCommon::getParam('dateFormat'));     
                         $userBlockedUntil=$dt;
                     }
                 }
@@ -189,19 +189,19 @@ class UserIdentity extends CUserIdentity
             $unsafeIp->attempts_total++;
             $unsafeIp->comments="user: ".$username;
             
-            $maxAttempts=Common::getParam('ipBlockMaxLoginAttempts');
+            $maxAttempts=AuthCommon::getParam('ipBlockMaxLoginAttempts');
             
             if ($maxAttempts>0){
                 if ($unsafeIp->attempts<$maxAttempts){
                     $unsafeIp->blocked_until=null;
                 }    
                 else{
-                    $ipBlockTimeMinutes=Common::getParam('ipBlockTimeMinutes');
+                    $ipBlockTimeMinutes=AuthCommon::getParam('ipBlockTimeMinutes');
                     if ($ipBlockTimeMinutes>0){
                         //block user
                         $dt = new DateTime();
                         $dt->add(new DateInterval('PT' . $ipBlockTimeMinutes . 'M'));
-                        $unsafeIp->blocked_until=$dt->format(Common::getParam('dateFormat'));     
+                        $unsafeIp->blocked_until=$dt->format(AuthCommon::getParam('dateFormat'));     
                         $ipBlockedUntil=$dt;
                     }
                 }

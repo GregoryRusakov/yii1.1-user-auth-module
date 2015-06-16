@@ -9,7 +9,7 @@
         try{
             $email=Helpers::getAppParam('adminEmail');
         } catch (Exception $ex) {
-            $email=Common::getParam('adminEmail');
+            $email=AuthCommon::getParam('adminEmail');
         }
         echo CHtml::mailto($email, $email); 
     ?>

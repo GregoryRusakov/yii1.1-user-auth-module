@@ -31,7 +31,7 @@ class InvitationsController extends Controller
 
         public function renderIndex($model){
             
-            $maxAttemptsBeforeCaptha=(int)Common::getParam('attemptsBeforeCaptcha');
+            $maxAttemptsBeforeCaptha=(int)AuthCommon::getParam('attemptsBeforeCaptcha');
             
             if ($maxAttemptsBeforeCaptha!=0){
                 $loginAtteptsInSession=(int)Yii::app()->session['loginAtteptsInSession'];
