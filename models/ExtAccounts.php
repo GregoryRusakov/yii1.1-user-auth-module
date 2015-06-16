@@ -80,10 +80,10 @@ class ExtAccounts extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('user_id',$this->user_id);
 		$criteria->compare('provider_name',$this->provider_name,true);
-		$criteria->compare('date_connected',$this->date_connected,true);
+		$criteria->compare('date_connected',$this->date_connected);
 		$criteria->compare('connected',$this->connected);
 		$criteria->compare('service_user_email',$this->service_user_email,true);
-		$criteria->compare('service_user_id',$this->service_user_id,true);
+		$criteria->compare('service_user_id',$this->service_user_id);
 		$criteria->compare('connected_manually',$this->connected_manually);
 
 		return new CActiveDataProvider($this, array(

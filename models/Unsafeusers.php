@@ -94,7 +94,7 @@ class Unsafeusers extends CActiveRecord
             $criteria->compare('id',$this->id);
             $criteria->compare('user_id',$this->user_id);
             $criteria->compare('attempts',$this->attempts);
-            $criteria->compare('blocked_until',$this->blocked_until,true);
+            $criteria->compare('blocked_until',$this->blocked_until);
             $criteria->compare('comments',$this->comments,true);
 
             return new CActiveDataProvider($this, array(

@@ -99,10 +99,10 @@ class Unsafeip extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('user_id',$this->user_id);
 		$criteria->compare('attempts',$this->attempts);
-		$criteria->compare('blocked_until',$this->blocked_until,true);
+		$criteria->compare('blocked_until',$this->blocked_until);
 		$criteria->compare('comments',$this->comments,true);
 		$criteria->compare('attempts_total',$this->attempts_total);
-		$criteria->compare('last_user_id',$this->last_user_id,true);
+		$criteria->compare('last_user_id',$this->last_user_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

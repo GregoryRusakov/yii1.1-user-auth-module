@@ -92,8 +92,8 @@ class Validations extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('guid',$this->guid,true);
-		$criteria->compare('exp_datetime',$this->exp_datetime,true);
+		$criteria->compare('guid',$this->guid);
+		$criteria->compare('exp_datetime',$this->exp_datetime);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('comments',$this->comments,true);
 

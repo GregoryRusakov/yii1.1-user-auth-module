@@ -80,7 +80,7 @@ class UsersComplementary extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('picture_file',$this->picture_file,true);
+		$criteria->compare('picture_file',$this->picture_file);
 		$criteria->compare('city',$this->city,true);
 		$criteria->compare('comments',$this->comments,true);
 

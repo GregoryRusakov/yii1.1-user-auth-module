@@ -230,5 +230,14 @@ class Users extends CActiveRecord{
 
         return $model;
     }    
+    
+    public function isActive(){
+        if ($this->deleted || !$this->activated || $this->blocked){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
         
 }
