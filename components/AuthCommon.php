@@ -53,7 +53,6 @@ class AuthCommon {
         return $key;
             
     }
-
         
     public function getGUID(){
         if (function_exists('com_create_guid')){

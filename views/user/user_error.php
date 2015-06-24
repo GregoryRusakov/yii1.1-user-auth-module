@@ -3,12 +3,12 @@
 
 ?>
 <?php
-    if (!isset($title)){
+    if (!isset($title) || empty($title)){
         $title=Yii::t('AuthModule.forms', 'Error. Title');
     }
 
-    if (!isset($message)){
-        $message=Yii::t('AuthModule.forms', 'Error. Message');
+    if (!isset($message) || empty($message)){
+       $message=Yii::t('AuthModule.forms', 'Error. Message');
     }
 
     $this->pageTitle=$title;

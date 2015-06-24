@@ -61,7 +61,9 @@ class LoginForm extends CFormModel
 			if(!$this->_identity->authenticate()){
 				$this->addError('password',Yii::t('AuthModule.main','Incorrect login or password'));
                         }
+
 		}
+                
 	}
 
 	/**
