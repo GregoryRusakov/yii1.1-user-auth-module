@@ -28,7 +28,7 @@ class UserController extends Controller
         $formLogin=new LoginForm;
         
         // collect user input data
-        if(isset($_POST['LoginForm'])){
+            if(isset($_POST['LoginForm'])){
 
             $formLogin->attributes=$_POST['LoginForm'];
                         
@@ -258,8 +258,7 @@ class UserController extends Controller
             
         $formActivation=new UserActivationForm;
 
-        if(isset($_POST['UserActivationForm'])){
-
+        if (empty($guid) && isset($_POST['UserActivationForm'])){
             $formActivation->attributes=$_POST['UserActivationForm'];
 
             if(!$formActivation->validate()){
@@ -270,6 +269,9 @@ class UserController extends Controller
             }
 
             $guid=$formActivation->guid;
+            
+        }
+        if(!empty($guid)){
             
             $user_id=$this->getValidationByGuid($guid, self::VALIDATOR_ACTIVATE);
             if ($user_id==null){

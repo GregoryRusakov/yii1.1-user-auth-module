@@ -22,7 +22,7 @@
         'adminEmail'=>'root@localhost',
         'profilePage'=>array('user/index'),
         'defaultController'=>'user/login',
-        'useInvitations'=>false,
+        'useInvitations'=>true,
         'allowSocialServices'=>true,
     );
      

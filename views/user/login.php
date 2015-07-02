@@ -45,17 +45,13 @@
    
 
 <?php 
-    //$loginUrl=Yii::app()->createUrl('auth/hybrid/login', array('service'=>'facebook'));
 
     echo '<span class="col-sm-2"></span>';
     echo CHtml::link(Yii::t('AuthModule.forms', 'Login. Restore password'),array('user/passrequest'));
     echo '<span class="margin-right-mid"></span>';
     echo CHtml::link(Yii::t('AuthModule.forms', 'Login. Register user'), array('user/registration'));
 
-
-
     $allowSocial=Helpers::getAppParam('allowSocialServices');
-
 
     if ($allowSocial){
         echo '<hr>';
