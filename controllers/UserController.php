@@ -246,7 +246,7 @@ class UserController extends Controller
             }
             else{
                 Yii::app()->user->setFlash('error', sprintf(Yii::t('AuthModule.main','Error sending email'), $email));
-                $this->redirect(array('user/registration'));
+                Helpers::showError('Ошибка отправки письма', 'Регистрация пользователя', true);
             }
         }
         else{
@@ -278,7 +278,6 @@ class UserController extends Controller
                 return;
             }
                     
-            //update user password
             $modelUser=$this->LoadModel($user_id);
             if ($modelUser->activated){
                 Yii::app()->user->setFlash('warning', Yii::t('AuthModule.main','User already activated'));

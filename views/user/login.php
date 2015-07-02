@@ -45,40 +45,44 @@
    
 
 <?php 
-    $loginUrl=Yii::app()->createUrl('auth/hybrid/login', array('service'=>'facebook'));
-?>
-   
-<?php
+    //$loginUrl=Yii::app()->createUrl('auth/hybrid/login', array('service'=>'facebook'));
+
     echo '<span class="col-sm-2"></span>';
     echo CHtml::link(Yii::t('AuthModule.forms', 'Login. Restore password'),array('user/passrequest'));
     echo '<span class="margin-right-mid"></span>';
     echo CHtml::link(Yii::t('AuthModule.forms', 'Login. Register user'), array('user/registration'));
-?>
 
-<hr>
-  
-<div class="nojs-hide">
-<?php 
 
-    if ($isAjax){
-        $socialLoginLabel='';
-    }else{
-        $socialLoginLabel=Yii::t('AuthModule.forms', 'Social login');
+
+    $allowSocial=Helpers::getAppParam('allowSocialServices');
+
+
+    if ($allowSocial){
+        echo '<hr>';
+        echo '<div class="nojs-hide">';
+        
+        if ($isAjax){
+            $socialLoginLabel='';
+        }else{
+            $socialLoginLabel=Yii::t('AuthModule.forms', 'Social login');
+        }
+        echo '<span class="col-sm-2 align-right">'.$socialLoginLabel.'</span>';
+
+        AuthCommon::renderExtAccountWindowJS();
+
+        AuthCommon::renderSocialLogin('facebook');
+
+        echo '<span class="margin-right-mid"></span>';
+        AuthCommon::renderSocialLogin('google');
+
+        echo '<span class="margin-right-mid"></span>';
+        AuthCommon::renderSocialLogin('vkontakte');
+        
+        echo '</div>';
     }
-    echo '<span class="col-sm-2 align-right">'.$socialLoginLabel.'</span>';
-    
-    AuthCommon::renderExtAccountWindowJS();
-    
-    AuthCommon::renderSocialLogin('facebook');
-
-    echo '<span class="margin-right-mid"></span>';
-    AuthCommon::renderSocialLogin('google');
-
-    echo '<span class="margin-right-mid"></span>';
-    AuthCommon::renderSocialLogin('vkontakte');
     
 ?>
-</div>
+
 <div class="nojs-show">
     <p><?php echo Yii::t('AuthModule.forms', 'Unable to login through social networks without JavaScript');?></p>
 </div>

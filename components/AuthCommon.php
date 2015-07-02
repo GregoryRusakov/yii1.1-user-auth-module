@@ -14,7 +14,7 @@ class AuthCommon {
     
     public function getParam($paramName){
         if ($paramName=='fromEmail'){
-            $value=Helpers::getAppParam('$paramName');
+            $value=Helpers::getAppParam($paramName);
         }
         else{
             $value=Yii::app()->controller->module->{$paramName};
@@ -120,7 +120,9 @@ class AuthCommon {
         $subject='=?UTF-8?B?'.base64_encode($subject).'?=';
         $body=$text;
         
-        return mail($email,$subject,$body,$headers);
+        $result=mail($email,$subject,$body,$headers);
+        
+        return $result;
      
     }
     

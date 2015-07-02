@@ -40,7 +40,7 @@ class Users extends CActiveRecord{
             // will receive user inputs.
             return array(
                     array('licence_key', 'length', 'max'=>36),
-                    array('licence_key', 'unique', 'caseSensitive'=>false, 'allowEmpty'=>false),
+                    array('licence_key, username', 'unique', 'caseSensitive'=>false, 'allowEmpty'=>false),
                     array('email, full_name, comments', 'length', 'max'=>255),
                     array('username', 'length', 'max'=>100),
                     array('email, username, full_name', 'safe', 'on'=>'search'),
@@ -68,7 +68,7 @@ class Users extends CActiveRecord{
                     array('invitationGuid', 'safe'),
                     array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastLogin, serviceLogin'),
                 
-                    array('username','match', 'pattern' => '/^[a-z0-9._-]{2,25}$/','message' => Yii::t('AuthModule.main','Invalid characters in username')),
+                    array('username','match', 'pattern' => '/^[a-zA-Z0-9._-]{2,25}$/','message' => Yii::t('AuthModule.main','Invalid characters in username')),
             );
     }
 
@@ -177,14 +177,14 @@ class Users extends CActiveRecord{
                 $this->activated=true;
             }
 
-            if(!$this->save()){
+            if (!$this->save()){
                 yii::app()->user->setFlash('error', CHtml::errorSummary($this));
                 return false;
             }
             
             //add default subscriptions
             if ($this->scenario=='activation'){
-                Helpers::SubscribeNewUser($this->id);
+                Helpers::setUserDefaultParameters($this->id);
             }
 
          return true;

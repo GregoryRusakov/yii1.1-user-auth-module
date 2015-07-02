@@ -30,6 +30,7 @@ class AuthModule extends CWebModule
         
         public $profilePage=array('user/index');
         public $useInvitations=false;
+        public $allowSocialServices=false;
         
 	public function init()
 	{
