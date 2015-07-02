@@ -12,6 +12,8 @@
         $model->username=$username;
     }    
     
+    $model->rememberMe=true;
+    
     $formRender=new FormElements($this, $model);
     $formRender->startForm('user-login', true);
     

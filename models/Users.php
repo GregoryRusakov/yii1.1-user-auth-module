@@ -68,7 +68,7 @@ class Users extends CActiveRecord{
                     array('invitationGuid', 'safe'),
                     array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastLogin, serviceLogin'),
                 
-                    array('username','match', 'not' => true, 'pattern' => '/^[a-z0-9._-]{2,25}$/','message' => Yii::t('AuthModule.main','Invalid characters in username')),
+                    array('username','match', 'pattern' => '/^[a-z0-9._-]{2,25}$/','message' => Yii::t('AuthModule.main','Invalid characters in username')),
             );
     }
 
@@ -180,6 +180,11 @@ class Users extends CActiveRecord{
             if(!$this->save()){
                 yii::app()->user->setFlash('error', CHtml::errorSummary($this));
                 return false;
+            }
+            
+            //add default subscriptions
+            if ($this->scenario=='activation'){
+                Helpers::SubscribeNewUser($this->id);
             }
 
          return true;

@@ -271,7 +271,7 @@ class UserController extends Controller
 
             $guid=$formActivation->guid;
             
-            $user_id=$this->getRestoreUserById($guid, self::VALIDATOR_ACTIVATE);
+            $user_id=$this->getValidationByGuid($guid, self::VALIDATOR_ACTIVATE);
             if ($user_id==null){
                 Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','ID not found'));
                 $this->redirect(array('user/activation'));
@@ -425,7 +425,7 @@ class UserController extends Controller
 
             $guid=$model->guid;
 
-            $user_id=$this->getRestoreUserById($guid, self::VALIDATOR_RESTORE);
+            $user_id=$this->getValidationByGuid($guid, self::VALIDATOR_RESTORE);
             if ($user_id==null){
                 if (!Yii::app()->user->hasFlash('error')){
                     Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Incorrect data in the form'));
@@ -455,7 +455,7 @@ class UserController extends Controller
         else{
             //create new form
 
-            if ($guid!=null && $this->getRestoreUserById($guid, self::VALIDATOR_RESTORE)==null){
+            if ($guid!=null && $this->getValidationByGuid($guid, self::VALIDATOR_RESTORE)==null){
                 //wrong guid
                 yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Incorrect ID'));
                 $this->redirect(array('user/passrequest'));
@@ -468,7 +468,7 @@ class UserController extends Controller
         }
     }       
 
-    private function getRestoreUserById($guid, $validation_type){
+    private function getValidationByGuid($guid, $validation_type){
 
         //find guid 
 
@@ -483,12 +483,12 @@ class UserController extends Controller
         $validations=Validations::model()->find($criteria);
         if ($validations==null){
             //incorrect guid
-            Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Restore failed. ID was not found'));
+            Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Could not find validation GUID'));
             return null;
         }
 
         if ((time()-$validations->exp_datetime)<0){
-            Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Restore failed. ID is obsolet'));
+            Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Validation GUID was expired'));
             return null;
         }
 
