@@ -25,10 +25,7 @@ class AuthModule extends CWebModule
         public $dateFormat='';
         public $timeZoneLabel='GMT';
         
-        public $adminEmail='';
-        //public $websiteHost='';
-        
-        public $profilePage=array('user/index');
+        public $profilePage=array('usernews');
         public $useInvitations=false;
         public $allowSocialServices=false;
         

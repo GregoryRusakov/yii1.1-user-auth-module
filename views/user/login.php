@@ -2,7 +2,9 @@
    
     $this->pageTitle=Yii::t('AuthModule.forms', 'Login. Title');
 
-    $isAjax=Yii::app()->request->isAjaxRequest;
+    //if (!isset($isAjax)){
+        $isAjax=Yii::app()->request->isAjaxRequest;
+    //}
     
     if (!isset($model)){
         $model=new LoginForm;
@@ -75,13 +77,13 @@
         AuthCommon::renderSocialLogin('vkontakte');
         
         echo '</div>';
+        
+        echo '<div class="nojs-show"><p>';
+            echo Yii::t('AuthModule.forms', 'Unable to login through social networks without JavaScript');
+        echo '</div>';
     }
     
 ?>
-
-<div class="nojs-show">
-    <p><?php echo Yii::t('AuthModule.forms', 'Unable to login through social networks without JavaScript');?></p>
-</div>
     
 </p>
 

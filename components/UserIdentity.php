@@ -25,7 +25,7 @@ class UserIdentity extends CUserIdentity
 	 * against some persistent user identity storage (e.g. database).
 	 * @return boolean whether authentication succeeds.
 	 */
-	public function authenticate($isServiceLogin=false)
+	public function authenticate($isExtServiceLogin=false)
 	{
             
             $ip=AuthCommon::getUserIp();
@@ -77,7 +77,7 @@ class UserIdentity extends CUserIdentity
                 return false;
             }
             
-            if (!$isServiceLogin){
+            if (!$isExtServiceLogin){
                 
                 $password_hash=$modelUser->password_hash;
                 $pass=$this->password;
@@ -113,7 +113,7 @@ class UserIdentity extends CUserIdentity
             // Generate a login token and save it in the DB
             $dt = new DateTime();
             $modelUser->date_lastlogin=$dt->format($dateFormat);
-            $modelUser->setScenario('lastLogin');
+            $modelUser->setScenario('setLastLogin');
             $modelUser->logintoken = sha1(uniqid(mt_rand(), true));
             if ($modelUser->save()){
                 //the login token is saved as a state

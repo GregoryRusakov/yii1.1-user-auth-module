@@ -31,6 +31,12 @@ return array(
              %s
              <br>',
     
+    'notifyAdmin_subject'=>'%s на сайте %s',
+    'notifyAdmin_text'=>'На сайте %s 
+            Пользователь %s (%s) %s
+            <br>на сайте %s
+            <br><br>', 
+    
     );
 
 

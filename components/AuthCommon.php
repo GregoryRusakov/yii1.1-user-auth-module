@@ -13,7 +13,7 @@
 class AuthCommon {
     
     public function getParam($paramName){
-        if ($paramName=='fromEmail'){
+        if ($paramName=='fromEmail' || $paramName=='adminEmail'){
             $value=Helpers::getAppParam($paramName);
         }
         else{
@@ -22,6 +22,48 @@ class AuthCommon {
         return $value;
     }
 
+    public function notifyAdminAboutUser(&$modelUser, $scenario){
+        $adminEmail=AuthCommon::getParam('adminEmail');
+        $userName=$modelUser->username;
+        
+        switch ($scenario){
+            case 'insert':
+                $actionSubject='Новый пользователь';
+                $actionText='зарегистрировался';
+                break;
+            case 'activate':
+                $actionSubject='Активация пользователя';
+                $actionText='выполнил активацию';                
+                break;
+            case 'update':
+                $actionSubject='Изменение данных пользователя';
+                $actionText='изменил данные';                               
+                break;
+            case 'passRestore':
+                $actionSubject='Пользователь восстанавливает пароль';
+                $actionText='восстанавливает пароль';                                
+                break;
+            default:
+                return;
+        }
+        
+        $websiteUrl=Yii::app()->getBaseUrl(true);
+        $siteName=Yii::app()->name;
+                
+        $headers=AuthCommon::createMailHeader();
+                
+        $subjectTemplate=AuthCommon::getTemplateValue('mail', 'notifyAdmin_subject');
+        $subject=sprintf($subjectTemplate, $actionSubject, $siteName);
+        
+        $textTemplate=AuthCommon::getTemplateValue('mail', 'notifyAdmin_text');
+        $body=sprintf($textTemplate, $siteName, $userName, $userEmail, $actionText, $websiteUrl);
+        
+        $subject='=?UTF-8?B?'.base64_encode($subject).'?=';
+        
+        return mail($adminEmail, $subject, $body, $headers);
+        
+    }
+    
     public function generateLicenceKey(){
         $key=self::generateKey();
         $i=0; $iMax=100;
@@ -218,7 +260,7 @@ class AuthCommon {
 
                       );
 
-                newwindow=window.open(url,'ServiceLogin',features);
+                newwindow=window.open(url,'extServiceLogin',features);
 
                if (window.focus) {
                    newwindow.focus();

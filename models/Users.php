@@ -49,11 +49,11 @@ class Users extends CActiveRecord{
                     array('terms_version', 'required', 'on'=>'insert', 'message'=>Yii::t('AuthModule.forms','Please sign terms and conditions')),
                 
                     array('password_entered', 'safe'),
-                    array('email', 'email', 'except'=>'lastLogin'),
+                    array('email', 'email', 'except'=>'setLastLogin'),
                     array('username, email', 'required', 'on'=>'insert, update'),
 
-                    array('password_entered', 'passValidator', 'except'=>'passRestore, activation, update, lastLogin, serviceLogin'),
-                    array('email', 'unique','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, lastLogin'),
+                    array('password_entered', 'passValidator', 'except'=>'passRestore, activation, update, setLastLogin, extServiceLogin'),
+                    array('email', 'unique','message'=>Yii::t('AuthModule.forms', 'Email already taken'),'except'=>'passRestore, setLastLogin'),
                 
                     array('username', 'unique', 'criteria'=>array(
                         'condition'=>'`created_manually`=:secondKey',
@@ -66,7 +66,7 @@ class Users extends CActiveRecord{
                     array('termsSigned', 'safe'),
                     array('invitationGuid', 'length', 'max'=>25),
                     array('invitationGuid', 'safe'),
-                    array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, lastLogin, serviceLogin'),
+                    array('verifyCode', 'captcha', 'allowEmpty'=>!Yii::app()->user->isGuest || !CCaptcha::checkRequirements(),'except'=>'passRestore, activation, setLastLogin, extServiceLogin'),
                 
                     array('username','match', 'pattern' => '/^[a-zA-Z0-9._-]{2,25}$/','message' => Yii::t('AuthModule.main','Invalid characters in username')),
             );
@@ -177,14 +177,21 @@ class Users extends CActiveRecord{
                 $this->activated=true;
             }
 
+            $scenario=$this->scenario;
+            
             if (!$this->save()){
                 yii::app()->user->setFlash('error', CHtml::errorSummary($this));
                 return false;
             }
             
             //add default subscriptions
-            if ($this->scenario=='activation'){
+            if ($scenario=='activation'){
                 Helpers::setUserDefaultParameters($this->id);
+            }
+            
+            //send message to Admin about changes
+            if ($scenario!='extServiceLogin' && $scenario!='setLastLogin'){
+                $result=AuthCommon::notifyAdminAboutUser($this, $scenario);
             }
 
          return true;

@@ -241,7 +241,7 @@ class HybridController extends Controller
         
         $isNewUserContemporary=($userContemporary==null);
         
-        $siteUser->scenario='serviceLogin';
+        $siteUser->scenario='extServiceLogin';
         $siteUser->date_lastlogin=$currentDateString;
         
         if (!$siteUser->created_manually){
@@ -262,7 +262,7 @@ class HybridController extends Controller
         }
         
         if ($isNewUserContemporary || !$siteUser->created_manually){
-            $userContemporary->scenario='serviceLogin';
+            $userContemporary->scenario='extServiceLogin';
             $userContemporary->user_id=$siteUser->id;           
             $userContemporary->city=$serviceProfile->city;
             $userContemporary->country=$serviceProfile->country;
