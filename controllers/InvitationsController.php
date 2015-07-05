@@ -9,6 +9,7 @@ class InvitationsController extends Controller
             
             if(isset($_POST['Invitations'])){
                 $model->attributes=$_POST['Invitations'];
+                $model->guid=trim($model->guid);
                 $isAvailable=Invitations::model()->checkAvaliable($model->guid);
                 if (!$isAvailable){
                     Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Invitation is not available'));

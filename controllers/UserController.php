@@ -59,13 +59,15 @@ class UserController extends Controller
             }            
             
             //if we have an email as username, then find username by email in database
-            $email=$formLogin->username;
-            $user=Users::model()->getByEmail($email);
-            if ($user!=null){
-                $username=$user->username;
-                $formLogin->username=$username;
-                $modelName=CHtml::modelName($formLogin);
-                $_POST[$modelName]['username']=$username;
+            $originalUserNameField=$formLogin->username;
+            if (strpos($originalUserNameField, '@')!==false){
+                $user=Users::model()->getByEmail($originalUserNameField);
+                if ($user!=null){
+                    $username=$user->username;
+                    $formLogin->username=$username;
+                    $modelName=CHtml::modelName($formLogin);
+                    $_POST[$modelName]['username']=$username;
+                }
             }
             
             $validated=$formLogin->validate();
@@ -91,12 +93,7 @@ class UserController extends Controller
                 if ($loggedIn){
                     $loggedUserPage=Yii::app()->user->getState('openPageAfterLogin');
                     if ($loggedUserPage==null){
-                        //we are not specifed manually page to return,
-                        //so try to get standard return page
-                        $loggedUserPage=Yii::app()->user->returnUrl;
-                    }
-                    if ($loggedUserPage==null){
-                        //go to profile page
+                        //$loggedUserPage=Yii::app()->user->returnUrl;
                         $loggedUserPage=AuthCommon::getParam('profilePage');   
                     }
                     Yii::app()->user->setState('openPageAfterLogin', null);
@@ -107,6 +104,8 @@ class UserController extends Controller
                     if (!Yii::app()->user->hasFlash('error')){
                         Yii::app()->user->setFlash('error', Yii::t('AuthModule.main','Login failed').'. '.Yii::t('AuthModule.main','Incorrect login or password'));
                     }
+                    //restore form value
+                    $formLogin->username=$originalUserNameField;
                     $this->render('login', array('model'=>$formLogin));
                     return; 
                 }
@@ -124,10 +123,10 @@ class UserController extends Controller
         $formLogin->username=$username;
         
         if ($isAjax){
-            $this->renderPartial('login',array('model'=>$formLogin, 'isAjax'=>false), false, true);
+            $this->renderPartial('login',array('model'=>$formLogin), false, true);
         }
         else{
-            $this->render('login',array('model'=>$formLogin, 'isAjax'=>false));
+            $this->render('login',array('model'=>$formLogin));
         }
         
     }

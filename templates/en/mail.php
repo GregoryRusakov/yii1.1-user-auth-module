@@ -33,7 +33,7 @@ return array(
              <br>',
     
     'notifyAdmin_subject'=>'%s on website %s',
-    'notifyAdmin_text'=>'New action on website %s 
+    'notifyAdmin_text'=>'New action on website 
             User %s (%s) %s
             <br>on website %s
             <br><br>',

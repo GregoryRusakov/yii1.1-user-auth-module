@@ -23,6 +23,7 @@ class AuthCommon {
     }
 
     public function notifyAdminAboutUser(&$modelUser, $scenario){
+        $userEmail=$modelUser->email;
         $adminEmail=AuthCommon::getParam('adminEmail');
         $userName=$modelUser->username;
         
@@ -31,7 +32,7 @@ class AuthCommon {
                 $actionSubject='Новый пользователь';
                 $actionText='зарегистрировался';
                 break;
-            case 'activate':
+            case 'activation':
                 $actionSubject='Активация пользователя';
                 $actionText='выполнил активацию';                
                 break;
@@ -40,8 +41,8 @@ class AuthCommon {
                 $actionText='изменил данные';                               
                 break;
             case 'passRestore':
-                $actionSubject='Пользователь восстанавливает пароль';
-                $actionText='восстанавливает пароль';                                
+                $actionSubject='Пользователь восстановил пароль';
+                $actionText='восстановил пароль';                                
                 break;
             default:
                 return;
@@ -56,7 +57,7 @@ class AuthCommon {
         $subject=sprintf($subjectTemplate, $actionSubject, $siteName);
         
         $textTemplate=AuthCommon::getTemplateValue('mail', 'notifyAdmin_text');
-        $body=sprintf($textTemplate, $siteName, $userName, $userEmail, $actionText, $websiteUrl);
+        $body=sprintf($textTemplate, $userName, $userEmail, $actionText, $websiteUrl);
         
         $subject='=?UTF-8?B?'.base64_encode($subject).'?=';
         

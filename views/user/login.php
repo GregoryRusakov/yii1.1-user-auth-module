@@ -2,9 +2,7 @@
    
     $this->pageTitle=Yii::t('AuthModule.forms', 'Login. Title');
 
-    //if (!isset($isAjax)){
-        $isAjax=Yii::app()->request->isAjaxRequest;
-    //}
+    $isAjax=Yii::app()->request->isAjaxRequest;
     
     if (!isset($model)){
         $model=new LoginForm;
@@ -17,7 +15,8 @@
     $model->rememberMe=true;
     
     $formRender=new FormElements($this, $model);
-    $formRender->startForm('user-login', true);
+    //$formRender->startForm('user-login', true);
+    $formRender->startForm('user-login', $isAjax);
     
     $formRender->showErrors(Yii::t('AuthModule.forms', 'Login. Login failure'));
     $formRender->textField('username', Yii::t('AuthModule.forms', 'Login. Username placeholder'));

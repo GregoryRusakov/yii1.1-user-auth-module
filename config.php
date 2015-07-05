@@ -19,7 +19,7 @@
         'ipBlockTimeMinutes'=>30,              
         'dateFormat'=>'Y-m-d H:i:s',              
         'timeZoneLabel'=>'UTC',     
-        'profilePage'=>array('user/index'),
+        'profilePage'=>array('/usernews'),
         'defaultController'=>'user/login',
         'useInvitations'=>true,
         'allowSocialServices'=>true,
