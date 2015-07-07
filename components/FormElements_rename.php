@@ -12,7 +12,7 @@
 
 Yii::import('application.modules.auth.*');
 
-class FormElements_rename{
+class FormElements_RENAME{ //rename it to FormElements
 
     public $relatedFieldNotSelected='<Не выбран>';
         
@@ -112,8 +112,9 @@ class FormElements_rename{
         $logoPicId='logo_pic_' . $fieldName;
         
         echo '<div class="form-group ' . $groupClass . '">';
-            echo CHtml::image($imagePath, 'Лого', array('id'=>$logoPicId, 'class'=>'control-label col-sm-2 ' . $addImgClass));
-            
+            echo '<div class="control-label col-sm-2">';
+            echo CHtml::image($imagePath, 'Лого', array('id'=>$logoPicId, 'class'=>'' . $addImgClass, 'style'=>'width:100px;'));
+            echo '</div>';
             echo '<div class="' . $this->fieldClass . '">';
             
             echo '<div class="input-group">';
@@ -128,6 +129,7 @@ class FormElements_rename{
             
             echo $this->form->error($model, $fieldName);
             echo '</div>';
+            
         echo '</div>';
 
         Yii::app()->clientScript->registerScript("fileSelect", "
@@ -172,7 +174,7 @@ class FormElements_rename{
         }
         else{
             $model=$this->model;
-             $fieldName=$field;
+            $fieldName=$field;
         }
         echo '<div class="form-group ' . $groupClass . '">';
         if ($useLabelEx){
@@ -214,12 +216,19 @@ class FormElements_rename{
                 echo '<label class="control-label col-sm-3">' . $label . '</label>';
             }
             echo '<div class="' . $this->fieldClass . '">';
-            echo '<input ' . $checkedString . ' data-toggle="toggle" data-onstyle="success"' . $idTag . 'type="checkbox" ' . $onChangeTag . '>';
+            echo '<input ' . $checkedString . ' data-toggle="toggle" data-on="Вкл." data-off="Выкл." data-onstyle="success"' . $idTag . 'type="checkbox" ' . $onChangeTag . '>';
         }
         else{
             echo $this->form->label($model,$fieldName, array('class'=>'control-label ' . $this->labelClass));
             echo '<div class="' . $this->fieldClass . '">';
-            echo $this->form->checkBox($model, $fieldName,  array('checked'=>$checkedString, 'data-toggle'=>'toggle', 'data-onstyle'=>'success' ));
+            echo $this->form->checkBox($model, $fieldName,  
+                    array('checked'=>$checkedString, 
+                        'data-on'=>'Вкл.', 
+                        'data-off'=>'Выкл.', 
+                        'data-toggle'=>'toggle', 
+                        'data-onstyle'=>'success' 
+                    ));
+
         }
         echo '</div>';
         echo '</div>';    
@@ -334,7 +343,9 @@ class FormElements_rename{
     
     public function submitAndCancelButtons($textSubmit, $confirmQuestion='', $textCancel=''){
         echo '<div class="form-group">';
-            echo '<div class="' . $this->submitOffcet . ' '. $this->fieldClass . '">';
+            //$fieldClass=$this->fieldClass;
+            $fieldClass='col-sm-5';
+            echo '<div class="' . $this->submitOffcet . ' '. $fieldClass . '">';
             if (empty($confirmQuestion)){
                 echo CHtml::submitButton($textSubmit, array('class' => 'btn btn-primary')); 
             }else{
@@ -349,12 +360,12 @@ class FormElements_rename{
                             return confirmResult;
                         }
                 ', CClientScript::POS_HEAD);
-                echo CHtml::submitButton($text, array('class' => 'btn btn-primary', 'onclick'=>'return submitQuestion($(this), "' . $confirmQuestion . '");')); 
+                echo CHtml::submitButton($textSubmit, array('class' => 'btn btn-primary', 'onclick'=>'return submitQuestion($(this), "' . $confirmQuestion . '");')); 
             }
             
             echo '<span class="margin-left-mid"></span>';
             if (empty($textCancel)){
-                $textCancel=Yii::t('AdminModule.view','Cancel');
+                $textCancel=Yii::t('main','Cancel');
             }
             echo CHtml::htmlButton($textCancel, array('class'=>'btn btn-default', 'onclick' => 'history.go(-1)'));
             
@@ -409,6 +420,9 @@ class FormElements_rename{
     }
     
     public function ajaxSubmitPanel($buttonLabel, $url, $messageFormId='ajaxFormMessage'){
+        
+        $successLoginUrl=Yii::app()->createUrl(Yii::app()->params['successLoginPage']);
+                
         echo '<div class="form-group">
             <label class="control-label ' . $this->labelClass . ' ajax-form-label"></label>
             <div class="col-sm-10">';
@@ -427,7 +441,9 @@ class FormElements_rename{
                                     $('#ajaxFormMessage').text(response.message);
                                     if (response.status==='success'){
                                         if (response.event==='LoggedIn'){
-                                            window.location.reload();
+                                            //window.location.reload();
+                                            //window.location.reload();
+                                            location.replace('" . $successLoginUrl . "');
                                             return;
                                         }
                                         var event = new CustomEvent(
@@ -535,9 +551,9 @@ class FormElements_rename{
         </div>';
                 
         //add model window event listeners
-        Yii::app()->clientScript->registerScript("ElementsListeners", '
+        Yii::app()->clientScript->registerScript("ElementsListeners_" . $fieldId, '
         
-        document.addEventListener("ElementCreated", function (e) {
+        document.addEventListener("ElementCreated_' . $targetController . 'Controller", function (e) {
                 id=e.detail.id;
                 name=e.detail.name;
 
@@ -546,7 +562,7 @@ class FormElements_rename{
                 $("#modalCard").modal("hide");
                 }, false);
 
-        document.addEventListener("ElementUpdated", function (e) {
+        document.addEventListener("ElementUpdated_' . $targetController . 'Controller", function (e) {
                 id=e.detail.id;
                 name=e.detail.name;
 
@@ -557,7 +573,8 @@ class FormElements_rename{
         ');
         
         //add listeners to filed button
-        Yii::app()->clientScript->registerScript("openScripts", "
+        $baseUrl=Yii::app()->baseUrl;
+        Yii::app()->clientScript->registerScript("openScripts_" . $fieldId, "
         
         jQuery('body').on('click','#" . $formFieldButtonId . "',
             function(){
@@ -565,14 +582,14 @@ class FormElements_rename{
                 if(String(elementId)==''){
                     //select element
                     jQuery.ajax({
-                        'url':'/trader-news.ru/index.php?r=" . $targetControllerFull . "/select',
+                        'url':'" . $baseUrl . "/index.php?r=" . $targetControllerFull . "/select',
                         'success':" . JSHelpers::renderOpenForm('modalSelect', 'Выбрать ' . $elementLabel) . ",
                     'cache':false});
                     return false;
                 }
                 
                 //just open element by id
-                jQuery.ajax({'url':'/trader-news.ru/index.php?r=" . $targetControllerFull . "/update&id='+elementId,
+                jQuery.ajax({'url':'" . $baseUrl . "/index.php?r=" . $targetControllerFull . "/update&id='+elementId,
                     'success':function(r){
                         $('#modalCardBody').html(r);
                         $('#modalCard').modal('show'); 
@@ -597,7 +614,9 @@ class FormElements_rename{
             var url = $(this).attr("href");
             id=getParameterByName(url, "id");
             selected=getParameterByName(url, "selected");
-            $("#' . $formTargetId . '").val(id);
+
+            id_element=$("#' . $formTargetId . '");
+            id_element.val(id);
             $("#' . $formFieldButtonId . '").val(selected);
             $("#modalSelect").modal("hide");
             return true;
