@@ -251,5 +251,21 @@ class Users extends CActiveRecord{
             return true;
         }
     }
+    
+    public function getLicenceKeyByUserId($userId){
+
+            $criteria=new CDbCriteria;
+            $criteria->select = 'licence_key';
+            $criteria->limit=1;
+
+            $criteria->compare('id',$userId, false); 
+            $model=$this->find($criteria);
+
+            if ($model==null){
+                return null;
+            }
+            
+            return $model->licence_key;
+        }             
         
 }
