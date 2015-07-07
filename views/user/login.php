@@ -44,7 +44,6 @@
 
     ?>
    
-
 <?php 
 
     echo '<span class="col-sm-2"></span>';
