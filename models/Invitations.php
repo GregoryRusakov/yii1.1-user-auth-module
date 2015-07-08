@@ -112,6 +112,9 @@ class Invitations extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
                         'sort'=>array('attributes'=>array('*')),
+                        'pagination'=>array(
+                            'pageSize'=>50,
+                        ),     
 		));
    
 	}
