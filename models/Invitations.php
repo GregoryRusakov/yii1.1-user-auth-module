@@ -113,7 +113,7 @@ class Invitations extends CActiveRecord
 			'criteria'=>$criteria,
                         'sort'=>array('attributes'=>array('*')),
                         'pagination'=>array(
-                            'pageSize'=>50,
+                            'pageSize'=>30,
                         ),     
 		));
    
