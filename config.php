@@ -22,6 +22,5 @@
         'profilePage'=>array('/usernews'),
         'defaultController'=>'user/login',
         'useInvitations'=>true,
-        'allowSocialServices'=>true,
     );
      
