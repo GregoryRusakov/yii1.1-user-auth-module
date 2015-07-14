@@ -12,7 +12,7 @@
 
     return array(
         'attemptsBeforeCaptcha'=>10,
-        'cookieBasedLoginDays'=>14,
+        'cookieBasedLoginDays'=>30,
         'userBlockMaxLoginAttempts'=>15,
         'userBlockTimeMinutes'=>30,
         'ipBlockMaxLoginAttempts'=>5,
