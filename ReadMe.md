@@ -74,6 +74,6 @@ Information
 Author: Gregory Rusakov
 e-mail: greg@analitica.ru
 
-Current version.: 150707 1819
+Current version.: 150719 1701
 
 <img src="https://ga-beacon.appspot.com/UA-60499668-1/GregoryRusakov/yii1.1-user-auth-module" />

@@ -267,5 +267,4 @@ class Users extends CActiveRecord{
             
             return $model->licence_key;
         }             
-        
 }
