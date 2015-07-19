@@ -97,6 +97,7 @@ class Invitations extends CActiveRecord
 		$criteria->compare('guid',$this->guid);
 		$criteria->compare('date_issued',$this->date_issued);
 		$criteria->compare('date_occuped',$this->date_occuped);
+                //$criteria->compare('used',$this->used);
 		$criteria->compare('username_created',$this->username_created, true);
                 
                 switch ($showMode){
