@@ -77,3 +77,13 @@ e-mail: greg@analitica.ru
 Current version.: 150719 1701
 
 <img src="https://ga-beacon.appspot.com/UA-60499668-1/GregoryRusakov/yii1.1-user-auth-module" />
+
+
+
+Автор репозитория:
+Григорий Русаков
+Эксперт в ИТ и ИИ
+https://it-rusakov.ru
+email: greg@it-rusakov.ru
+Компания Аналитика. Проекты и решения
+https://analitica-soft.ru (внедрение ИТ и ИИ)
